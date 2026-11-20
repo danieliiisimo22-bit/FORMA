@@ -48,25 +48,28 @@ ejecutables. La configuración de identidad de Git es local a este repositorio;
 usa danieliiisimo22-bit y su dirección noreply de GitHub.
 
 Destino y autenticación
-Destino previsto: https://github.com/danieliiisimo22-bit/FORMA
-Privacidad: privado; no se autorizó hacerlo público.
+Repositorio creado: https://github.com/danieliiisimo22-bit/FORMA
+Privacidad comprobada: privado; no se autorizó hacerlo público.
 Durante la preparación inicial no había GitHub CLI, token ni credenciales Git
-disponibles en el M1. Por eso esta nota no certifica que el repositorio remoto
-ya exista o que se haya realizado el push. Verificar el resultado de la entrega,
-`git remote -v`, `git log -1` y el repositorio autenticado antes de clonar.
+disponibles en el M1. Posteriormente se conectó GitHub y se creó el repositorio
+privado desde la sesión existente del navegador. El commit inicial local es
+1455420. El primer push está pendiente de autenticar Git mediante GitHub CLI;
+su solicitud de permisos requiere autorización del usuario porque abarca más
+repositorios que FORMA. No se ha aceptado ese permiso automáticamente. Verificar
+el resultado de la entrega, `git remote -v`, `git log -1` y el repositorio
+autenticado antes de clonar.
 
 Si todavía está pendiente la primera subida
 1. Iniciar sesión con danieliiisimo22-bit mediante la integración GitHub o GitHub
    CLI. No pegar tokens ni contraseñas en chats ni guardarlos en el repositorio.
-2. Crear FORMA PRIVADO y vacío, sin README/licencia/.gitignore automáticos.
-   Si ese nombre ya existe, detenerse y comprobarlo: no sobrescribir ni forzar.
+2. FORMA ya fue creado PRIVADO y vacío, sin README/licencia/.gitignore automáticos.
+   No recrearlo. Comprobar su estado y no sobrescribir cambios remotos ni forzar.
 3. Desde la raíz local de Git:
      git remote -v
      git push -u origin main
    El remoto origin está configurado al destino previsto; esto no crea por sí
-   solo el repositorio en GitHub. Con GitHub CLI autenticado se puede crear con:
-     gh repo create danieliiisimo22-bit/FORMA --private
-   Comprobar después el repositorio y la rama main con la sesión autenticada.
+   solo el repositorio en GitHub. Comprobar después la rama main y el commit
+   remoto con la sesión autenticada.
 
 Preparación del M4 mañana
 Requisitos: Git, Node.js 22.12 o posterior dentro de una versión admitida por

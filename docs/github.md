@@ -2,8 +2,8 @@
 
 | Campo | Valor |
 | --- | --- |
-| Repositorio previsto | `danieliiisimo22-bit/FORMA` |
-| Visibilidad prevista | Privado |
+| Repositorio creado | `danieliiisimo22-bit/FORMA` |
+| Visibilidad comprobada | Privado |
 | Nombre del proyecto | FORMA — Generative Art Studio |
 | Descripción | Local-first procedural generative art studio for the web and macOS. |
 | Lenguaje principal | TypeScript |
@@ -19,7 +19,7 @@
 | Vista social | [Imagen de 1280 × 640](github-social.png) |
 | Capturas | [Escritorio](validacion/estudio.png), [móvil](validacion/movil.png), [galería](validacion/galeria.png) |
 
-El destino acordado es `https://github.com/danieliiisimo22-bit/FORMA`, privado. La creación remota y la primera subida requieren autenticación de esa cuenta; consulta `CONTINUIDAD.txt` para el estado de preparación y los pasos entre equipos. Esta carpeta de código fuente es la raíz de Git y de `main`; no se incluye en Git la aplicación compilada de la carpeta superior. El workflow valida el proyecto y empaqueta la aplicación como artefacto de CI. Los binarios se generan localmente o mediante CI y se pueden adjuntar a una release cuando se decida distribuirlos.
+Se creó `https://github.com/danieliiisimo22-bit/FORMA`, privado. La primera subida requiere autenticar Git en este Mac; consulta `CONTINUIDAD.txt` para el estado y los pasos entre equipos. Esta carpeta de código fuente es la raíz de Git y de `main`; no se incluye en Git la aplicación compilada de la carpeta superior. El workflow valida el proyecto y empaqueta la aplicación como artefacto de CI. Los binarios se generan localmente o mediante CI y se pueden adjuntar a una release cuando se decida distribuirlos.
 
 ## Texto de la release
 
