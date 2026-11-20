@@ -19,7 +19,7 @@
 | Vista social | [Imagen de 1280 × 640](github-social.png) |
 | Capturas | [Escritorio](validacion/estudio.png), [móvil](validacion/movil.png), [galería](validacion/galeria.png) |
 
-Se creó `https://github.com/danieliiisimo22-bit/FORMA`, privado. La primera subida requiere autenticar Git en este Mac; consulta `CONTINUIDAD.txt` para el estado y los pasos entre equipos. Esta carpeta de código fuente es la raíz de Git y de `main`; no se incluye en Git la aplicación compilada de la carpeta superior. El workflow valida el proyecto y empaqueta la aplicación como artefacto de CI. Los binarios se generan localmente o mediante CI y se pueden adjuntar a una release cuando se decida distribuirlos.
+Se creó `https://github.com/danieliiisimo22-bit/FORMA`, privado, y se autenticó Git en el M1. Consulta `CONTINUIDAD.txt` para comprobar la sincronización y trabajar entre equipos. Esta carpeta de código fuente es la raíz de Git y de `main`; no se incluye en Git la aplicación compilada de la carpeta superior. El workflow valida el proyecto y empaqueta la aplicación como artefacto de CI. Los binarios se generan localmente o mediante CI y se pueden adjuntar a una release cuando se decida distribuirlos.
 
 ## Texto de la release
 

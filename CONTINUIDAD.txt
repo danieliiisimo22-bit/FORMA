@@ -50,26 +50,27 @@ usa danieliiisimo22-bit y su dirección noreply de GitHub.
 Destino y autenticación
 Repositorio creado: https://github.com/danieliiisimo22-bit/FORMA
 Privacidad comprobada: privado; no se autorizó hacerlo público.
-Durante la preparación inicial no había GitHub CLI, token ni credenciales Git
-disponibles en el M1. Posteriormente se conectó GitHub y se creó el repositorio
-privado desde la sesión existente del navegador. El commit inicial local es
-1455420. El primer push está pendiente de autenticar Git mediante GitHub CLI;
-su solicitud de permisos requiere autorización del usuario porque abarca más
-repositorios que FORMA. No se ha aceptado ese permiso automáticamente. Verificar
-el resultado de la entrega, `git remote -v`, `git log -1` y el repositorio
-autenticado antes de clonar.
+GitHub y GitHub CLI quedaron autenticados con danieliiisimo22-bit en el M1.
+El usuario autorizó expresamente los permisos de la CLI. El commit inicial local
+1455420 se conserva junto al commit remoto de inicialización, integrados sin
+sobrescribir historial. La rama principal es main y origin apunta a ese repo.
+Comprobar `git status -sb` y `git log -1` al comenzar; el commit remoto debe
+coincidir con el último commit de main después de terminar la subida.
 
-Si todavía está pendiente la primera subida
-1. Iniciar sesión con danieliiisimo22-bit mediante la integración GitHub o GitHub
-   CLI. No pegar tokens ni contraseñas en chats ni guardarlos en el repositorio.
-2. FORMA ya fue creado PRIVADO y vacío, sin README/licencia/.gitignore automáticos.
-   No recrearlo. Comprobar su estado y no sobrescribir cambios remotos ni forzar.
-3. Desde la raíz local de Git:
-     git remote -v
-     git push -u origin main
-   El remoto origin está configurado al destino previsto; esto no crea por sí
-   solo el repositorio en GitHub. Comprobar después la rama main y el commit
-   remoto con la sesión autenticada.
+La CLI y su configuración se conservaron fuera de la raíz de Git, en
+/Users/soporte/Documents/FORMA-1.0.0/.herramientas/. El helper de autenticación se
+configuró solo para este repositorio. No se guardaron tokens en archivos del
+proyecto ni se subieron al repositorio. No mover esa carpeta sin actualizar el
+helper local. En el M4 habrá que iniciar sesión con su propia instalación de Git.
+
+Comprobación de sincronización
+  git remote -v
+  git status -sb
+  git log -1 --oneline
+  git ls-remote origin refs/heads/main
+El SHA remoto debe coincidir con `git rev-parse HEAD`. Si quedan commits locales
+sin subir, usar `git push`; no recrear el repositorio ni forzar el push. No pegar
+tokens ni contraseñas en chats ni guardarlos en el repositorio.
 
 Preparación del M4 mañana
 Requisitos: Git, Node.js 22.12 o posterior dentro de una versión admitida por
