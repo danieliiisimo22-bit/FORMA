@@ -10,6 +10,8 @@ Estudio de arte abstracto procedural para el navegador. Genera y exporta imágen
 
 Para continuar el mismo proyecto entre el Mac M1 y el Mac M4, consulta la [nota de continuidad](CONTINUIDAD.txt). La [revisión del 19 de noviembre de 2026](docs/revision-2026-11-19/INFORME.txt) recoge las pruebas y las limitaciones observadas en el M1.
 
+La [revisión posterior del código](docs/revision-2026-11-19/REVISION-CODIGO.txt) documenta pendientes reproducibles de importación y avisos en dependencias de desarrollo. Su corrección y las decisiones de distribución quedan pendientes de las pruebas manuales del usuario sobre la interfaz y los fondos de pantalla, según la nota de continuidad.
+
 [Instalación en macOS](docs/macos.md) · [Ficha de GitHub](docs/github.md) · [Galería de composiciones](docs/validacion/galeria.png)
 
 ## Empezar

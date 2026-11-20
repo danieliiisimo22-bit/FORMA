@@ -1,0 +1,96 @@
+REVISIÓN DEL CÓDIGO Y LA SUBIDA — FORMA
+19 de noviembre de 2026, America/Santiago
+
+NOTA DE CIERRE POSTERIOR
+Se conserva esta revisión del commit 207e8d8 como evidencia del estado revisado.
+El usuario decidió no avanzar todavía con las correcciones: primero probará la
+interfaz y la calidad de los fondos de pantalla. Los hallazgos que siguen no
+están corregidos. Este informe se incorpora al repositorio junto a la nota de
+continuidad; el commit de cierre solo modifica documentación.
+La intención de distribuir mediante DMG en macOS y llegar a otros Mac, Windows
+y Linux se registró para evaluación futura. Tauri/Rust conservando React es una
+opción, no una migración aprobada. iPhone no es prioridad. No se han generado
+nuevos instaladores como parte de este cierre.
+
+Estado revisado
+Repositorio privado: https://github.com/danieliiisimo22-bit/FORMA
+Commit local y remoto: 207e8d89ea02f3f2b94fa29c3ac8688a06637298
+63 archivos versionados. Árbol de trabajo limpio. El clon de verificación
+obtenido desde GitHub coincide en commit y árbol Git con la copia original.
+La ejecución de Actions 44659814355 terminó correctamente: pruebas unitarias y
+compilación web en Linux, compilación universal macOS, comprobaciones arm64 y
+x86_64, firma ad hoc y publicación del ZIP como artefacto de CI.
+
+Resultado de la revisión adicional
+La subida está completa y los flujos principales ya probados siguen respaldados
+por 20 pruebas de motor y 17 de navegador ejecutadas previamente. Esta pasada
+añadió revisión del código, dos reproducciones aisladas de importación y auditoría
+de dependencias; no se repitieron las 37 pruebas porque su código no ha cambiado.
+No considero que todo esté libre de fallos: se confirmaron los siguientes puntos.
+
+1. PRIORIDAD MEDIA: importación incompleta sin aviso al alcanzar el límite.
+Archivos: src/state/studio.ts:17-18 y 136-139;
+src/components/Dialogs.tsx:184-185.
+mergeLibrary concatena primero los elementos existentes y después los nuevos;
+unique conserva como máximo los primeros 96. Con 96 favoritos existentes, un
+favorito nuevo válido importado queda fuera de la colección. Se reprodujo con
+96 recetas distintas y una receta nueva: solicitadas 1, incorporadas 0,
+storageWarning=false. La interfaz muestra Biblioteca importada igualmente.
+El mismo patrón se aplica a recetas y paletas con nombres nuevos. La operación
+debe avisar del límite, permitir resolverlo o rechazar la importación completa
+sin fingir que todos los elementos se incorporaron. Es relevante para mover
+bibliotecas entre el M1 y el M4. El archivo JSON original no se modifica.
+
+2. PRIORIDAD MEDIA: herramientas de pruebas con avisos de seguridad conocidos.
+Archivos: package.json:32 y package-lock.json:2798-2799.
+Vitest está fijado en 3.2.6 y arrastra tinypool 1.1.1 y @vitest/mocker.
+npm audit devuelve tres paquetes afectados: dos clasificados críticos (tinypool
+y Vitest por propagación) y uno moderado (@vitest/mocker). No son tres
+vulnerabilidades independientes de la app desplegada. npm audit --omit=dev
+devuelve cero avisos en dependencias de producción.
+El aviso crítico de tinypool describe un gadget que necesita contaminación de
+prototipos previa y ciertas opciones de llamada. No se comprobó una cadena de
+explotación en FORMA; el proyecto lo usa para pruebas. El aviso de mocker describe
+servidores con su plugin público registrado; la configuración actual no lo añade
+al servidor Vite de FORMA. Corresponde actualizar la cadena de pruebas y validar
+su compatibilidad, sin aplicar npm audit fix --force a ciegas. La remediación
+propuesta por npm implica una actualización mayor de Vitest.
+Fuentes primarias consultadas:
+https://github.com/advisories/GHSA-85c8-ppgw-ccpr
+https://github.com/advisories/GHSA-82fw-gwwq-j7x9
+
+3. PRIORIDAD BAJA: la paleta exportada no se puede reimportar por la interfaz.
+Archivo: src/components/Dialogs.tsx:134 y 176-185.
+Exportar paleta produce {schema:1,name,colors}. Importar JSON solo distingue
+recetas por generator o bibliotecas con favorites/saved/palettes. Se reprodujo
+usando el formato exacto exportado: parseLibrary lo rechaza con Formato de
+biblioteca incompatible. No existe otra entrada visible para importar paletas
+individuales. Conviene admitir ese formato o explicar que su exportación es
+solo para uso externo. Exportar/importar la biblioteca completa sigue siendo
+el procedimiento comprobado para trasladar paletas guardadas entre los Mac.
+
+Integridad y credenciales
+Se revisaron los 63 archivos seguidos por Git buscando patrones habituales de
+tokens GitHub, claves AWS y claves privadas. No hubo coincidencias. Esto es una
+comprobación por patrones, no una garantía universal de ausencia de secretos.
+No se versionaron node_modules, dist, release, test-results, herramientas locales,
+credenciales ni FORMA.app. El archivo mayor pesa unos 2,1 MB y es una galería PNG.
+Las dependencias y recursos necesarios para compilar sí están presentes, tal
+como también prueban las instalaciones limpias y compilaciones de Actions.
+
+Límites
+Actions ejecuta las pruebas unitarias y builds, pero no las 17 pruebas de
+navegador. Estas se ejecutaron localmente en Chromium. La revisión adicional no
+repite la inspección visual previa ni amplía la cobertura a Intel, lectores de
+pantalla, sesiones prolongadas o todos los navegadores. Sigue pendiente el
+acceso a ayuda en ventanas estrechas y la notarización de la distribución.
+
+Artefactos locales de esta revisión
+- reproduccion-importaciones.mts: reproduce los dos casos con datos en memoria.
+- auditoria-dependencias.json: respuesta completa de npm audit.
+- auditoria-produccion.json: respuesta con las dependencias de desarrollo omitidas.
+Los artefactos originales permanecen en la carpeta local revision-2026-11-19,
+fuera de la raíz de Git. Este informe conserva sus resultados y los pasos para
+reproducir los dos casos descritos. No se modificó ni se subió código del producto
+durante la revisión original; main estaba en 207e8d8. Los commits documentales
+posteriores pueden cambiar el HEAD sin cambiar el estado funcional revisado.

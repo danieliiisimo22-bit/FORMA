@@ -6,6 +6,22 @@ Continuar este mismo programa en casa (M1) y en el trabajo (M4), usando un nuevo
 repositorio privado FORMA en la cuenta danieliiisimo22-bit. No recrear la app ni
 migrarla a Rust. Los otros repositorios de esa cuenta son proyectos distintos.
 
+Decisión de cierre del usuario
+La implementación queda detenida después de guardar y subir este cierre.
+El usuario quiere probar personalmente la interfaz y evaluar qué tan bien crea
+fondos de pantalla antes de decidir cambios. No corregir todavía los fallos
+detectados, no migrar tecnología y no preparar nuevos instaladores. Esperar sus
+comentarios y una nueva indicación antes de retomar trabajo de implementación.
+Lo autorizado para este cierre es documentación, commit y sincronización.
+
+Próxima evaluación manual del usuario
+- Comodidad de la interfaz y claridad del flujo de generación.
+- Calidad visual, variedad y utilidad de las composiciones como fondos.
+- Encuadre y proporciones para las pantallas donde utilizará los fondos.
+- Correspondencia entre la vista previa y las imágenes exportadas.
+Estos resultados aún están pendientes; las comprobaciones técnicas anteriores
+no sustituyen la valoración visual y de uso del usuario.
+
 Estado del producto
 Versión 1.0.0. React 19, TypeScript, Vite, Zustand; motor WebGL2 con respaldo
 Canvas 2D. La app macOS es Swift + WebKit y lleva el frontend compilado dentro.
@@ -28,6 +44,21 @@ Trabajo realizado hoy
   el fallo estaba en la verificación posterior, no en el binario generado.
 
 Pendientes del producto
+- Importación al alcanzar 96 elementos: al tener 96 favoritos distintos e
+  importar uno nuevo válido, no se incorpora y la interfaz igualmente comunica
+  Biblioteca importada. El límite se aplica también a recetas y paletas. Debe
+  resolverse o advertirse sin descartar elementos nuevos silenciosamente.
+- Reimportación de paletas: Exportar paleta genera {schema:1,name,colors}, pero
+  Importar JSON solo admite recetas o bibliotecas y rechaza ese formato. Para
+  trasladar paletas guardadas entre los Mac, usar la biblioteca completa.
+- Dependencias de desarrollo: npm audit señaló tres paquetes afectados en la
+  cadena de Vitest 3.2.6 (tinypool y Vitest clasificados críticos, @vitest/mocker
+  moderado). npm audit --omit=dev devolvió cero avisos de producción. No se
+  comprobó explotación en FORMA. La actualización requiere evaluar compatibilidad
+  y probarla; no ejecutar npm audit fix --force ni actualizar ahora.
+- El informe detallado y las reproducciones textuales de estos casos están en
+  docs/revision-2026-11-19/REVISION-CODIGO.txt. Permanecen pendientes por decisión
+  expresa del usuario; este commit documental no los corrige.
 - Firma Developer ID/notarización para evitar avisos en futuras descargas.
 - En ventanas de 875 px o menos se oculta el botón Ayuda y atajos: conservar un
   acceso alternativo visible. Detalle de usabilidad de gravedad baja.
@@ -35,6 +66,16 @@ Pendientes del producto
   nativas parciales. No se probó hardware Intel ni todas las versiones macOS.
 - Una migración a Rust se discutió solo como posibilidad futura. No iniciarla
   al retomar este trabajo sin una petición nueva del usuario.
+
+Distribución futura: intención, no trabajo aprobado
+El usuario quiere poder distribuir e instalar FORMA en otros equipos:
+- macOS: evaluar un instalador DMG y el proceso de firma/notarización.
+- Windows y Linux: evaluar empaquetado e instalación para ambos sistemas.
+- Tauri/Rust es una opción futura para el contenedor de escritorio, conservando
+  la interfaz React. No hay una migración aprobada ni una decisión técnica tomada.
+- iPhone no es prioridad; queda únicamente como posibilidad futura.
+La distribución actual sigue siendo la app Swift/WebKit de macOS y la versión
+web. No se ha creado un DMG ni versiones nativas para Windows, Linux o iPhone.
 
 Estructura y Git
 En el M1, la raíz de Git es:
@@ -126,6 +167,7 @@ La app compilada, dependencias y servidores locales tampoco se sincronizan.
 Cómo retomar con Codex en el M4
 Abrir la carpeta del clon FORMA como proyecto y pedir:
   "Lee CONTINUIDAD.txt y el README. Continuamos este mismo FORMA desde el M1.
-   Comprueba el estado de Git y ayúdame a continuar sin recrear el programa."
+   Comprueba el estado de Git. La implementación está detenida mientras pruebo
+   la interfaz y los fondos; espera mis resultados antes de corregir o migrar."
 Git conserva el contexto escrito en los archivos; no transfiere automáticamente
 el historial de este chat. Esta nota es el punto de entrada para retomarlo.
