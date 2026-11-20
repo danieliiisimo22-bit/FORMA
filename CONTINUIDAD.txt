@@ -22,6 +22,10 @@ Trabajo realizado hoy
 - No se cambió el código del producto. Las seis pruebas adicionales están en
   tests/auditoria.spec.ts. Informe, métricas y capturas seleccionadas en
   docs/revision-2026-11-19/.
+- Al publicar en GitHub se corrigió la sintaxis de la comprobación de
+  arquitecturas del workflow: lipo recibe primero el ejecutable y verifica
+  arm64/x86_64 por separado. La compilación nativa había terminado correctamente;
+  el fallo estaba en la verificación posterior, no en el binario generado.
 
 Pendientes del producto
 - Firma Developer ID/notarización para evitar avisos en futuras descargas.
