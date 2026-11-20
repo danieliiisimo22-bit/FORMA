@@ -1,0 +1,26 @@
+node_modules/
+dist/
+playwright-report/
+test-results/
+.DS_Store
+release/
+
+# Local credentials and generated caches
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.mobileprovision
+.npmrc
+.netrc
+.aws/
+.ssh/
+coverage/
+*.tsbuildinfo
+.vite/
+*.app/
+*.zip

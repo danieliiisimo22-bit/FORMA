@@ -1,0 +1,42 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build:macos
+      - run: |
+          lipo -verify_arch arm64 x86_64 release/FORMA.app/Contents/MacOS/FORMA
+          codesign --verify --strict release/FORMA.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FORMA-macOS-universal
+          path: release/FORMA-*-macOS-universal.zip
+          if-no-files-found: error
