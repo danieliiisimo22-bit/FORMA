@@ -9,7 +9,7 @@ import { resolution, suffix, validateSize } from '../export/image'
 import type { ImageFormat } from '../export/image'
 import { extractColors, generateColors, palettes, validHex } from '../palettes'
 import { parseRecipe } from '../presets/recipes'
-import { parseLibrary, readLibrary, recipeKey, useStudio } from '../state/studio'
+import { parseLibrary, parsePaletteFile, readLibrary, recipeKey, useStudio } from '../state/studio'
 import { Artwork } from './Artwork'
 import { Dialog, IconButton, toggleIndex } from './ui'
 import { Lock, Unlock } from 'lucide-react'
@@ -181,8 +181,15 @@ export function LibraryDialog({ onClose, notify }: { onClose: () => void; notify
         notify('Receta importada')
         onClose()
       } else {
-        store.mergeLibrary(parseLibrary(value))
-        notify('Biblioteca importada')
+        const isPalette = value && typeof value === 'object' && 'colors' in value
+        store.mergeLibrary(isPalette
+          ? { schema: 1, favorites: [], saved: [], palettes: [parsePaletteFile(value)] }
+          : parseLibrary(value))
+        if (useStudio.getState().storageWarning) {
+          setError('Los datos se importaron a esta sesión. Exporta una copia: el navegador no pudo guardarlos.')
+        } else {
+          notify(isPalette ? 'Paleta importada' : 'Biblioteca importada')
+        }
       }
     } catch (reason) {
       setError(reason instanceof SyntaxError ? 'El archivo no contiene JSON válido.' : (reason as Error).message)

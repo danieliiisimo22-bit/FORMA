@@ -14,8 +14,21 @@ type StudioLibrary = { schema: 1; favorites: Recipe[]; saved: NamedRecipe[]; pal
 export const recipeKey = (recipe: Recipe) => JSON.stringify(recipe)
 const same = (a: Recipe, b: Recipe) => recipeKey(a) === recipeKey(b)
 const recent = (items: Recipe[], recipe: Recipe) => [recipe, ...items.filter((item) => !same(item, recipe))].slice(0, limit)
-const unique = <T>(values: T[], key: (value: T) => string) =>
-  Array.from(new Map(values.map((value) => [key(value), value])).values()).slice(0, maxSaved)
+function mergeCollection<T>(existing: T[], incoming: T[], key: (value: T) => string, label: string) {
+  const merged = new Map(existing.map((value) => [key(value), value]))
+  for (const value of incoming) {
+    const id = key(value)
+    const previous = merged.get(id)
+    if (previous && JSON.stringify(previous) !== JSON.stringify(value)) {
+      throw new Error(`Ya existe «${id}» en ${label} con otro contenido. Cambia su nombre en el archivo antes de importarlo.`)
+    }
+    merged.set(id, value)
+  }
+  if (merged.size > maxSaved) {
+    throw new Error(`La importación superaría el límite de ${maxSaved} elementos en ${label}. Libera espacio y vuelve a importar.`)
+  }
+  return [...merged.values()]
+}
 
 function object(value: unknown): Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new Error('Archivo JSON inválido.')
@@ -31,6 +44,11 @@ function parsePalette(value: unknown): Palette {
   const { name, colors } = object(value)
   if (!Array.isArray(colors) || colors.length !== 5 || !colors.every(validHex)) throw new Error('Una paleta debe tener cinco colores HEX.')
   return { name: nameOf(name), colors: [...colors] }
+}
+
+export function parsePaletteFile(value: unknown): Palette {
+  if (object(value).schema !== 1) throw new Error('Formato de paleta incompatible.')
+  return parsePalette(value)
 }
 
 export function parseLibrary(value: unknown): StudioLibrary {
@@ -133,11 +151,14 @@ export const useStudio = create<Studio>((set, get) => ({
     set((state) => ({ palettes: [{ name: normalized, colors: state.recipe.palette }, ...state.palettes.filter((item) => item.name !== normalized)].slice(0, maxSaved) }))
   },
   removePalette: (name) => set((state) => ({ palettes: state.palettes.filter((item) => item.name !== name) })),
-  mergeLibrary: (library) => set((state) => ({
-    favorites: unique([...state.favorites, ...library.favorites], recipeKey),
-    saved: unique([...state.saved, ...library.saved], (item) => item.name),
-    palettes: unique([...state.palettes, ...library.palettes], (item) => item.name),
-  })),
+  mergeLibrary: (library) => set(({ favorites, saved, palettes }) => {
+    const current = parseLibrary({ schema: 1, favorites, saved, palettes })
+    return {
+      favorites: mergeCollection(current.favorites, library.favorites, recipeKey, 'favoritos'),
+      saved: mergeCollection(current.saved, library.saved, (item) => item.name, 'recetas'),
+      palettes: mergeCollection(current.palettes, library.palettes, (item) => item.name, 'paletas'),
+    }
+  }),
   setMode: (mode) => set({ mode }),
 }))
 

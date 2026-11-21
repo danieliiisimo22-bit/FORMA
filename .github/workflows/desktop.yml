@@ -1,0 +1,53 @@
+name: Desktop preview
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-latest
+            platform: windows-x64
+            binary: forma.exe
+          - runner: macos-15
+            platform: macos-arm64
+            binary: forma
+          - runner: macos-15-intel
+            platform: macos-x64
+            binary: forma
+          - runner: ubuntu-24.04
+            platform: linux-x64
+            binary: forma
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: rustup target add wasm32-unknown-unknown
+      - run: npm ci
+      - run: npm run build:desktop
+      - run: node --experimental-strip-types scripts/check-seed-parity.mjs
+      - if: runner.os == 'Windows'
+        run: npx playwright install chromium
+      - if: runner.os == 'Windows'
+        run: npm run test:e2e
+        env:
+          FORMA_DESKTOP: '1'
+      - if: runner.os == 'Windows'
+        run: npm run test:gallery
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FORMA-${{ matrix.platform }}
+          path: |
+            target/release/${{ matrix.binary }}
+            LICENSE
+          if-no-files-found: error

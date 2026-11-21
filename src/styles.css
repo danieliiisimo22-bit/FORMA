@@ -298,7 +298,6 @@ kbd { color: var(--accent); font-family: var(--mono); background: #2c3023; paddi
   .wordmark > span { font-size: 16px; }
   .wordmark small { display: none; }
   .top-tools, .top-actions { gap: 3px; }
-  .help-btn { display: none; }
   .work { grid-template-columns: minmax(0,1fr) 238px; grid-template-areas: "workspace settings" "library library"; }
   .stage { min-height: 380px; }
   .library { border-top: 1px solid var(--line); border-right: 0; padding-bottom: 10px; }
@@ -322,6 +321,7 @@ kbd { color: var(--accent); font-family: var(--mono); background: #2c3023; paddi
   .export-button { min-width: auto; min-height: 32px; padding: 0 5px; gap: 3px; font-size: .67rem; }
   .export-button svg { width: 14px; }
   .top-heart { width: 27px; }
+  .help-btn { width: 25px; min-height: 32px; }
   .work { grid-template-columns: minmax(0,1fr); grid-template-areas: "workspace" "settings" "library"; }
   .stage { height: clamp(240px, 79vw, 440px); min-height: 0; flex: none; padding: 11px; }
   .canvas-toolbar { min-height: 43px; padding-inline: 10px; }

@@ -1,5 +1,7 @@
 # FORMA — Generative Art Studio
 
+The 1.1 preview adds a Rust desktop launcher and a Rust/WebAssembly seed routine. See the [desktop guide (Spanish)](docs/desktop.md).
+
 A browser studio for procedural abstract art. Generate and export images locally with deterministic WebGL2 rendering and a Canvas 2D fallback. FORMA runs without accounts, telemetry, external services, or generative AI.
 
 [README en español](README.md) · [Architecture](docs/architecture.md) · [Generators](docs/generators.md) · [Validation](docs/validation.md)

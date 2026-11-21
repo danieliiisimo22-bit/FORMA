@@ -6,11 +6,11 @@ Estudio de arte abstracto procedural para el navegador. Genera y exporta imágen
 
 ![FORMA en escritorio](docs/validacion/estudio.png)
 
-**Lenguaje principal:** TypeScript. El motor gráfico usa GLSL y la aplicación de macOS usa Swift y WebKit.
+La vista previa 1.1 incluye un ejecutable Rust que abre el estudio en el navegador y utiliza Rust/WebAssembly para las semillas. La interfaz React/TypeScript y el renderizado WebGL2/Canvas 2D se comparten con la versión web. Consulta la [guía de escritorio](docs/desktop.md).
 
 Para continuar el mismo proyecto entre el Mac M1 y el Mac M4, consulta la [nota de continuidad](CONTINUIDAD.txt). La [revisión del 19 de noviembre de 2026](docs/revision-2026-11-19/INFORME.txt) recoge las pruebas y las limitaciones observadas en el M1.
 
-La [revisión posterior del código](docs/revision-2026-11-19/REVISION-CODIGO.txt) documenta pendientes reproducibles de importación y avisos en dependencias de desarrollo. Su corrección y las decisiones de distribución quedan pendientes de las pruebas manuales del usuario sobre la interfaz y los fondos de pantalla, según la nota de continuidad.
+La [revisión del código](docs/revision-2026-11-19/REVISION-CODIGO.txt) documenta el estado de la versión original. Esta vista previa corrige la importación al llegar al límite de la biblioteca, admite el JSON de una paleta individual y devuelve el acceso a Ayuda en pantallas estrechas.
 
 [Instalación en macOS](docs/macos.md) · [Ficha de GitHub](docs/github.md) · [Galería de composiciones](docs/validacion/galeria.png)
 

@@ -151,3 +151,49 @@ test('auditoría: límite de megapíxeles', async ({ page }) => {
   await page.getByRole('button', { name: 'Descargar', exact: true }).click()
   await expect(page.getByRole('alert')).toContainText('34 megapíxeles')
 })
+
+test('importación conserva la biblioteca llena y admite paletas individuales', async ({ page }) => {
+  await page.keyboard.press('g')
+  const recipe = await current(page)
+  await page.getByRole('button', { name: 'Guardar favorito', exact: true }).click()
+  await page.getByRole('button', { name: 'Mis recetas' }).click()
+  await page.getByRole('textbox', { name: 'Nombre de receta' }).fill('Composición de prueba')
+  await page.getByRole('button', { name: 'Guardar receta', exact: true }).click()
+  const importData = (value: unknown) => page.locator('input[type=file]').setInputFiles({
+    name: 'forma.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(value)),
+  })
+  const savedLibrary = () => page.evaluate(() => JSON.parse(localStorage.getItem('forma-studio.v1')!).library)
+  const original = await savedLibrary()
+  await importData(original)
+  await expect(page.getByRole('status').filter({ hasText: 'Biblioteca importada' })).toBeVisible()
+  expect(await savedLibrary()).toEqual(original)
+
+  const favorites = Array.from({ length: 96 }, (_, seed) => ({ ...recipe, seed }))
+  const library = { schema: 1, favorites, saved: [], palettes: [] }
+  await page.evaluate((library) => {
+    const session = JSON.parse(localStorage.getItem('forma-studio.v1')!)
+    localStorage.setItem('forma-studio.v1', JSON.stringify({ ...session, library }))
+  }, library)
+  await page.reload()
+  await page.getByRole('button', { name: 'Mis recetas' }).click()
+
+  await importData({ ...library, favorites: [{ ...recipe, seed: 96 }], saved: [{ name: 'Prueba', recipe }] })
+  await expect(page.getByRole('alert')).toContainText('límite de 96')
+  expect(await savedLibrary()).toEqual(library)
+
+  const palette = { schema: 1, name: 'Paleta de intercambio', colors: recipe.palette }
+  await importData(palette)
+  await expect(page.getByText(palette.name, { exact: true })).toBeVisible()
+  const { schema: _, ...entry } = palette
+  expect(await savedLibrary()).toEqual({ ...library, palettes: [entry] })
+  await importData({ ...palette, colors: ['#000000', ...palette.colors.slice(1)] })
+  await expect(page.getByRole('alert')).toContainText('con otro contenido')
+  expect(await savedLibrary()).toEqual({ ...library, palettes: [entry] })
+})
+
+test('ayuda accesible en ventanas estrechas', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.getByRole('button', { name: 'Ayuda y atajos' }).click()
+  await expect(page.getByRole('dialog')).toContainText('Generar')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390)
+})

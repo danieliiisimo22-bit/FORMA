@@ -9,8 +9,8 @@ export function createRecipe(generator: Generator, seed: number): Recipe {
   return {
     schema: 1, generator: generator.id, algorithm: generator.version, seed,
     palette: [...paletteByName.get(generator.palette)!.colors], paletteName: generator.palette,
-    harmony: 'analog', personality: 'Balanced', paletteLocked: false, colorLocks: [],
-    parameters: generator.parameters.map((p) => p.initial) as Recipe['parameters'], parameterLocks: [],
+    harmony: 'analog', personality: 'Balanced', paletteLocked: false, colorLocks: [], parameterLocks: [],
+    parameters: generator.parameters.map((p) => p.initial) as Recipe['parameters'],
     complexity: 0.56, contrast: 1, saturation: 1,
     symmetry: { mode: 'free', order: 6, axis: 0, phase: 0, perturbation: 0 },
     texture: { finish: 'fine', amount: 0.17 }, aspect: '3:2', customAspect: [3, 2],

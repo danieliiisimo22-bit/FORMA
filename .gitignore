@@ -4,6 +4,9 @@ playwright-report/
 test-results/
 .DS_Store
 release/
+target/
+.build-tools/
+.rust-anything/
 
 # Local credentials and generated caches
 .env

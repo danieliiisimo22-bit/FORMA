@@ -31,13 +31,23 @@ export function fbm(x: number, y: number) {
   return 0.57 * noise(x, y) + 0.28 * noise(2.07 * x + 7.2, 2.07 * y + 3.1) + 0.15 * noise(4.17 * x - 2.3, 4.17 * y + 8.4)
 }
 
+export function randomWordTs(state: number) {
+  let t = Math.imul(state ^ (state >>> 15), state | 1)
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
+  return (t ^ (t >>> 14)) >>> 0
+}
+
+let randomWord = randomWordTs
+
+export function useRustRandomWord(mixWord: typeof randomWordTs) {
+  randomWord = (state) => mixWord(state) >>> 0
+}
+
 export function randomFrom(seed: number) {
   let state = seed >>> 0
   return () => {
     state = (state + 0x6d2b79f5) >>> 0
-    let t = Math.imul(state ^ (state >>> 15), state | 1)
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+    return randomWord(state) / 4294967296
   }
 }
 

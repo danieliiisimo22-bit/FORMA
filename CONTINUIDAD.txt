@@ -1,3 +1,13 @@
+FORMA — CONTINUIDAD
+
+Actualización del 20 de noviembre de 2026, America/Santiago
+El usuario pidió retomar FORMA desde su repositorio, preparar una versión
+en Rust para Windows, macOS y Linux y guardar el avance localmente en
+L:\GitHub\FORMA antes de publicar. La vista previa prioriza la revisión
+en Windows. Sigue las instrucciones actuales de docs/desktop.md.
+
+La nota original del 19 de noviembre queda abajo como registro histórico.
+
 FORMA — CONTINUIDAD ENTRE MAC M1 Y MAC M4
 Fecha de la nota: 19 de noviembre de 2026, America/Santiago
 
