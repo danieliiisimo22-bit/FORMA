@@ -1,4 +1,4 @@
-# Validación de FORMA 1.2.0-preview.1
+# Validación de FORMA 1.2.0-preview.2
 
 | Verificación | Cobertura |
 | --- | --- |

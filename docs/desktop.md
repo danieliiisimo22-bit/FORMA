@@ -4,7 +4,7 @@ El lanzador Rust sirve los archivos embebidos en `http://127.0.0.1:56144/` y abr
 
 ## Ejecutar los portables
 
-Extrae el ZIP de tu plataforma. En Windows x64, abre **Iniciar FORMA.cmd** o **forma.exe**. En Linux x64 y macOS 13+, ejecuta `./forma` desde el directorio extraído. En macOS hay compilaciones separadas para Apple Silicon e Intel. Si el extractor omite los permisos en Unix, usa `chmod +x forma`. Los binarios de macOS están publicados como vista previa sin notarización de Apple. [Paquetes](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.1)
+Extrae el ZIP de tu plataforma. En Windows x64, abre **Iniciar FORMA.cmd** o **forma.exe**. En Linux x64 y macOS 13+, ejecuta `./forma` desde el directorio extraído. En macOS hay compilaciones separadas para Apple Silicon e Intel. Si el extractor omite los permisos en Unix, usa `chmod +x forma`. Los binarios de macOS están publicados como vista previa sin notarización de Apple. [Paquetes](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2)
 
 ## Compilar
 

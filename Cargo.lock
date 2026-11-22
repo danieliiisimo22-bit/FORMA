@@ -110,7 +110,7 @@ dependencies = [
 
 [[package]]
 name = "forma"
-version = "1.2.0-preview.1"
+version = "1.2.0-preview.2"
 dependencies = [
  "open",
  "tiny_http",
@@ -118,7 +118,7 @@ dependencies = [
 
 [[package]]
 name = "forma-build"
-version = "1.2.0-preview.1"
+version = "1.2.0-preview.2"
 dependencies = [
  "sha2",
  "zip",
@@ -126,7 +126,7 @@ dependencies = [
 
 [[package]]
 name = "forma-core"
-version = "1.2.0-preview.1"
+version = "1.2.0-preview.2"
 dependencies = [
  "serde",
  "serde_json",
@@ -134,7 +134,7 @@ dependencies = [
 
 [[package]]
 name = "forma-studio"
-version = "1.2.0-preview.1"
+version = "1.2.0-preview.2"
 dependencies = [
  "forma-core",
  "js-sys",

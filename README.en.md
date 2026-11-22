@@ -2,7 +2,7 @@
 
 A local procedural art studio for abstract compositions and wallpapers. **Rust** implements the UI, the 22 generators, color and palettes, the library, and the export pipeline. The browser runs the studio as **WebAssembly**. WebGL2 uses GLSL shaders, with a Canvas 2D fallback backed by the same Rust engine. The Rust launcher embeds all studio assets.
 
-[Español](README.md) · [Downloads](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.1) · [MIT license](LICENSE)
+[Español](README.md) · [Downloads](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2) · [MIT license](LICENSE)
 
 ![The FORMA studio with its canvas, library, and controls](docs/validacion/estudio.png)
 

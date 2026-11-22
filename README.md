@@ -1,10 +1,10 @@
-<p align="center"><img src="public/forma.svg" alt="Símbolo geométrico de FORMA" width="78" height="78"></p>
+<p align="center"><img src="public/forma.svg" alt="Espiral de FORMA" width="78" height="78"></p>
 
 # FORMA — Generative Art Studio
 
 Estudio local para crear fondos y arte abstracto procedural. **Rust** implementa la interfaz, los 22 generadores, las paletas, la biblioteca y la exportación. El navegador ejecuta el estudio como **WebAssembly** y dibuja con **WebGL2 y GLSL**, con respaldo Canvas 2D. El lanzador Rust incorpora todos los recursos.
 
-[Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.1) · [English README](README.en.md) · [Roadmap](docs/roadmap.md) · [Licencia MIT](LICENSE)
+[Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2) · [English README](README.en.md) · [Roadmap](docs/roadmap.md) · [Licencia MIT](LICENSE)
 
 ![FORMA con el lienzo, la biblioteca y los controles de composición](docs/validacion/estudio.png)
 

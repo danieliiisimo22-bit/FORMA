@@ -1,6 +1,6 @@
 # Roadmap de FORMA
 
-Estado al 22 de noviembre de 2026 · Vista previa **1.2.0-preview.1**
+Estado al 22 de noviembre de 2026 · Vista previa **1.2.0-preview.2**
 
 | Fase | Estado actual | Criterio para avanzar |
 | --- | --- | --- |
