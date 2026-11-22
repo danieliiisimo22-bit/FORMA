@@ -1,0 +1,10 @@
+float scale=1.5+a*3.1;
+    float xx=x*scale+(s-3.14)*0.08;
+    float cell=floor(xx);
+    float j=hash(vec2(cell,floor(s*10.0)));
+    float yy=y+(j-0.5)*c*1.9;
+    float dx=fract(xx)-0.5;
+    float r=length(vec2(dx, max(yy,0.0)*(0.7+d*1.0)));
+    float f=fract(r*(4.0+k*10.0));
+    float show=step(r,0.45);
+    return mix(0.94, mix(0.18+j*0.37,0.80,step(b*0.73,f)),show);

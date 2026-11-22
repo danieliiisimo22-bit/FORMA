@@ -3,8 +3,8 @@ Push-Location -LiteralPath $PSScriptRoot
 try {
     rustup target add wasm32-unknown-unknown
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo instalar el destino WebAssembly.' }
-    npm.cmd ci
-    if ($LASTEXITCODE -ne 0) { throw 'No se pudieron instalar las dependencias.' }
+    cargo install wasm-bindgen-cli --locked --version 0.2.130
+    if ($LASTEXITCODE -ne 0) { throw 'No se pudo instalar wasm-bindgen.' }
 } finally {
     Pop-Location
 }

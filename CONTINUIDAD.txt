@@ -1,5 +1,9 @@
 FORMA — CONTINUIDAD
 
+Actualización del 22 de noviembre de 2026, America/Santiago
+FORMA 1.2.0-preview.1 migra el estudio y el empaquetado a Rust. Usa los pasos
+vigentes en README.md y docs/desktop.md. Las notas siguientes son históricas.
+
 Actualización del 20 de noviembre de 2026, America/Santiago
 El usuario pidió retomar FORMA desde su repositorio, preparar una versión
 en Rust para Windows, macOS y Linux y guardar el avance localmente en

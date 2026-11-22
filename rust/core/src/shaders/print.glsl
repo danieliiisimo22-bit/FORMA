@@ -1,0 +1,13 @@
+vec2 p=vec2(x,y);
+    float scale=7.0+a*17.0+k*11.0;
+    float n=fbm(p*1.53+s);
+    float m=0.5+0.5*cos(x*2.7+y*1.6+s);
+    float dots=length(fract(p*scale)-0.5);
+    float dots2=length(fract(rot(p,0.19+d*0.50)*scale+vec2(b*0.53,b*0.71))-0.5);
+    float arc=length(p-vec2(0.62*sin(s*1.1),0.54*cos(s)))*1.8;
+    float inkMass=0.5+0.5*cos(arc+y*0.91+s*0.22);
+    float cover=smoothstep(0.20,0.66,n*0.35+inkMass*0.65);
+    float overprint=smoothstep(0.30,0.75,0.69*m+0.31*n);
+    float ink=cover*(1.0-smoothstep(0.03+cover*c*0.50,0.06+cover*c*0.50,dots));
+    float ink2=overprint*(1.0-smoothstep(0.05+overprint*c*0.44,0.08+overprint*c*0.44,dots2));
+    return 0.94-ink*0.54-ink2*0.40;

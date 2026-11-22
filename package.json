@@ -1,39 +1,19 @@
 {
-  "name": "forma-generative-art-studio",
-  "version": "1.1.0-preview.2",
+  "name": "forma-browser-tests",
   "private": true,
+  "version": "1.2.0-preview.1",
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview --host 127.0.0.1",
-    "test": "vitest run",
+    "test": "playwright test",
     "test:e2e": "playwright test",
-    "test:gallery": "playwright test --grep @gallery",
-    "build:desktop": "node scripts/build-desktop.mjs",
-    "build:macos": "bash scripts/build-macos.sh"
-  },
-  "dependencies": {
-    "lucide-react": "^0.577.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "zustand": "^5.0.0"
+    "test:gallery": "playwright test --grep @gallery"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.0",
-    "@tailwindcss/vite": "^4.2.0",
-    "@types/node": "^22.0.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^5.1.0",
-    "tailwindcss": "^4.2.0",
-    "typescript": "~5.9.3",
-    "vite": "^7.3.0",
-    "vitest": "^4.1.12"
+    "@playwright/test": "1.65.1"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": ">=22.12.0"
   },
-  "description": "Local-first procedural art studio for the web, Windows, macOS and Linux."
+  "description": "Browser verification for the FORMA Rust studio."
 }

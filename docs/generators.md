@@ -12,11 +12,11 @@
 
 ## Añadir un estilo
 
-1. Añade una entrada al registro en `src/generators/index.ts` con un ID estable, versión, familia, nombre, descripción y paleta curada. Para añadir una familia, registra su nombre y descripción en `src/generators/families.ts`. El registro determina su orden en la biblioteca.
+1. Añade una entrada al registro en `rust/core/src/fields.rs` con un ID estable, familia, nombre, descripción y paleta curada. Para añadir una familia, registra su nombre y descripción en `rust/core/src/generator.rs`. El registro determina su orden en la biblioteca.
 2. Define cuatro parámetros con etiquetas, explicación, valor inicial y rango seguro. Los controles de Estudio admiten el intervalo completo entre 0 y 1.
-3. Implementa el campo con `glsl` y `sample`. Ambos reciben coordenadas normalizadas `x`, `y`, cuatro parámetros `a` a `d`, complejidad `k` y fase `s`. El escalar de salida se traduce a la rampa cromática. El renderer se encarga de la simetría, color, acabado y exportación.
+3. Implementa el muestreo CPU en Rust mediante `Sample` y el shader equivalente en `rust/core/src/shaders/`. Ambos reciben coordenadas normalizadas, cuatro parámetros, complejidad y fase. El renderizador aplica la simetría y lleva el resultado a la rampa cromática.
 4. Declara los modos de simetría compatibles. Marca `intense` cuando el patrón requiera advertencia. Si usas formas de alta frecuencia, revisa su efecto en miniaturas y al exportar.
-5. Define `presetSeed` en los metadatos con una semilla curada. Comprueba el preset y varias semillas con `npm run test:gallery`. Revisa distribución tonal, detalle, contraste y comportamiento al variar la proporción.
+5. Define `seed` en los metadatos con una semilla curada. Usa `cargo test --locked -p forma-core` y, después de compilar, `npm run test:gallery`. Revisa distribución tonal, detalle, contraste y comportamiento al variar la proporción.
 6. Conserva la versión existente de un algoritmo para las recetas publicadas. Para introducir cambios incompatibles, añade el despacho por versión y un caso de importación que valide cada versión admitida.
 
 ## Extensiones pendientes

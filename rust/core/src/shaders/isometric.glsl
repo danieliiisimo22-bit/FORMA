@@ -1,0 +1,13 @@
+vec2 p=vec2(x,y)*(2.2+a*5.2+k*2.6);
+    vec2 span=vec2(1.7320508,3.0);
+    vec2 first=mod(p+span*0.5,span)-span*0.5;
+    vec2 second=mod(p,span)-span*0.5;
+    vec2 f=dot(first,first)<dot(second,second)?first:second;
+    vec2 cell=(p-f)/span;
+    float angle=dot(f,f)>0.0?atan(f.y,f.x):0.0;
+    float face=floor(mod(angle+TAU*5.0/12.0,TAU)/(TAU/3.0));
+    float light=face==0.0?1.0:face==1.0?0.0:0.45;
+    float edge=0.8660254-max(abs(f.x),0.5*abs(f.x)+0.8660254*abs(f.y));
+    float h=hash(floor(cell*2.0+0.5)+floor(s*17.0));
+    float tone=0.29+light*(0.24+b*0.31)+(h-0.5)*d*0.27;
+    return mix(0.09,tone,smoothstep(c*0.16,c*0.16+0.022,edge));

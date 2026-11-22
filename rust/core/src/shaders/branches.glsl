@@ -1,0 +1,23 @@
+float t=(1.16-y)/1.97;
+    float spine=0.24*sin(t*2.6+s)+b*0.42*(t-0.35);
+    float dx=x-spine, reach=abs(dx);
+    float lean=reach*(0.24+b*0.22)+pow(reach,1.6)*0.16;
+    float rows=6.0+c*6.0+k*3.0;
+    float stagger=dx>=0.0?0.28:-0.18;
+    float branch=(t-lean)*rows+stagger;
+    float root=(floor(branch)+0.5-stagger)/rows;
+    float canopy=pow(max(0.0,sin(clamp(root,0.0,1.0)*3.14159265)),0.93);
+    float span=(0.37+a*0.68)*canopy*(1.0-0.28*clamp(root,0.0,1.0));
+    float taper=1.0-smoothstep(0.0,max(span,0.001),reach);
+    float bend=(fract(branch)-0.5)/rows;
+    float width=(0.003+d*0.013)*(0.22+0.78*taper);
+    float rib=1.0-smoothstep(width,width+0.005,abs(bend));
+    float twig=1.0-smoothstep(0.002+d*0.002,0.007+d*0.003,
+      abs((fract(reach*(9.0+4.0*k))-0.5)*0.072+abs(bend)*0.81-0.022));
+    twig*=smoothstep(0.006,0.02,reach)*(1.0-smoothstep(0.033,0.046,abs(bend)));
+    float leaf=max(rib*(0.42+0.46*taper),twig*(0.14+0.42*taper));
+    float growth=smoothstep(0.035,0.16,root)*(1.0-smoothstep(0.86,1.0,root));
+    float stemWidth=(0.012+d*0.021)*(1.0-0.80*clamp(t,0.0,1.0));
+    float stem=(1.0-smoothstep(stemWidth,stemWidth+0.008,reach))*(1.0-smoothstep(0.90,1.0,t));
+    float mist=0.08+0.22*exp(-reach*1.85-abs(t-0.57)*1.60);
+    return mist+max(0.55*stem,leaf*growth*(1.0-smoothstep(0.80,1.0,reach/max(span,0.001))))*0.75;

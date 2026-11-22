@@ -1,11 +1,11 @@
 # Roadmap de FORMA
 
-Estado al 22 de noviembre de 2026 · Vista previa **1.1.0-preview.2**
+Estado al 22 de noviembre de 2026 · Vista previa **1.2.0-preview.1**
 
 | Fase | Estado actual | Criterio para avanzar |
 | --- | --- | --- |
 | **1.1 · Estabilización** | Se corrigieron importaciones de bibliotecas y paletas individuales, el acceso móvil a Ayuda y la conservación del historial y Deshacer. Hay pruebas de recuperación del renderizador, importación, exportación y uso móvil. | Revisar sesiones largas y confirmar el uso de los portables en los equipos de destino. |
-| **1.2 · Expansión artística** | El catálogo pasó de 12 a 22 generadores en siete familias. Los seis estilos geométricos y orgánicos ya preparados se suman a los cuatro incorporados para esta entrega. Se superó la meta inicial de 6 a 8 incorporaciones. | Evaluar la variedad visual, completar el director de composición y añadir variantes guiadas por objetivos visuales. |
+| **1.2 · Motor Rust y expansión artística** | La interfaz, el motor, las recetas, la exportación y el empaquetado se migraron a Rust. El catálogo conserva 22 generadores en siete familias. | Evaluar la variedad visual, completar el director de composición y añadir variantes guiadas por objetivos visuales. |
 | **1.5 · Estudio avanzado** | Planificado. | Incorporar capas, máscaras, mezcla de algoritmos y edición no destructiva. |
 | **2.0 · Distribución** | Hay lanzador Rust, paquetes portables para tres sistemas y compilaciones automatizadas. | Completar validación en equipos de destino, instaladores, firma, notarización y actualizaciones. Evaluar Tauri si aporta beneficios medibles. |
 | **2.x · Movimiento y producción** | Planificado. | Añadir animación procedural, exportación por lotes y formatos de mayor profundidad de color. |

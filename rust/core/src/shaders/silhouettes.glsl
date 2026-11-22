@@ -1,0 +1,16 @@
+float kind=min(floor(a*4.0),3.0);
+    vec2 p=rot(vec2(x,y),(d-0.5)*1.57);
+    float scale=0.34+b*0.42;
+    vec2 shift=vec2(0.13+c*0.36,-0.06-c*0.13);
+    vec2 main=(p+shift*0.31)/scale, echo=(p-shift)/(scale*(0.72+k*0.16));
+    vec2 h=vec2(abs(main.x),abs(echo.x)), v=vec2(main.y,echo.y);
+    vec2 edge;
+    if(kind==0.0) edge=vec2(length(main),length(echo))-1.0;
+    else if(kind==1.0) edge=max(h,abs(v))-0.79;
+    else if(kind==2.0) edge=max(v-0.5,0.8660254*h-0.5*v-0.5);
+    else edge=max(h,0.5*h+0.8660254*abs(v))-0.8660254;
+    vec2 mask=1.0-smoothstep(vec2(-0.012),vec2(0.014),edge);
+    float bg=0.07+0.13*exp(-dot(p,p)*0.72);
+    float fill=0.64+0.19*clamp(main.x*0.3-main.y*0.24+0.5,0.0,1.0);
+    float rim=smoothstep(-0.065,-0.035,edge.x)*(0.04+0.08*k);
+    return mix(mix(bg,0.40+0.06*sin(s),mask.y),fill+rim,mask.x);

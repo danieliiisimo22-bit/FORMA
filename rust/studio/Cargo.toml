@@ -1,0 +1,28 @@
+[package]
+name = "forma-studio"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+forma-core = { path = "../core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+js-sys = "0.3"
+wasm-bindgen = "=0.2.130"
+wasm-bindgen-futures = "0.4"
+web-sys = { version = "0.3", features = [
+  "Blob", "BlobPropertyBag", "CanvasRenderingContext2d", "console", "Crypto",
+  "CssStyleDeclaration", "DedicatedWorkerGlobalScope", "Document", "DomRect", "DomStringMap", "DomTokenList",
+  "Element", "Event", "EventTarget", "File", "FileList", "HtmlAnchorElement", "HtmlCanvasElement", "HtmlDialogElement",
+  "HtmlElement", "HtmlInputElement", "HtmlSelectElement", "ImageData", "KeyboardEvent",
+  "MessageEvent", "Node", "NodeList", "OffscreenCanvas", "OffscreenCanvasRenderingContext2d",
+  "ImageEncodeOptions", "Storage", "Url", "WebGl2RenderingContext", "WebGlBuffer", "WebGlProgram",
+  "WebGlShader", "WebGlTexture", "WebGlUniformLocation", "WebGlVertexArrayObject", "Window", "Worker",
+  "WorkerOptions", "WorkerType",
+] }

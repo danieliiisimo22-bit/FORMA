@@ -3,3 +3,4 @@
 *.swift text eol=lf
 *.png binary
 *.svg text eol=lf
+*.glsl text eol=lf

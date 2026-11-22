@@ -1,0 +1,10 @@
+[package]
+name = "forma-build"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+sha2 = "0.10"
+zip = { version = "6", default-features = false, features = ["deflate"] }

@@ -1,31 +1,16 @@
-# Validación de FORMA 1.1.0-preview.2
-
-La suite web de Chromium completó 23 pruebas y el motor completó 30 pruebas de Vitest. El ejecutable de Linux x64 devolvió la versión esperada y sirvió el HTML y el módulo WebAssembly en WSL.
+# Validación de FORMA 1.2.0-preview.1
 
 | Verificación | Cobertura |
 | --- | --- |
-| Motor | Los 22 generadores responden a la semilla y son reproducibles. Se comprueban identidad entre teselas CPU, simetría, gama cromática, validación de recetas y conservación de bloqueos. |
-| Rust/WASM | Se cotejaron 65.543 estados de semillas contra la implementación de referencia en TypeScript. |
-| Interfaz | Generación, historial, deshacer y rehacer, restauración de sesión, estilos cromáticos, controles contextuales, variantes, favoritos, comparación y paletas. |
-| Bibliotecas | Importación y exportación de recetas y colecciones, importación con límite de capacidad y paletas individuales. |
-| Exportación | Dimensiones de PNG, JPEG y WebP. Exportación UHD 8K tras cancelar y volver a iniciar. |
-| Recuperación | Transición a Canvas 2D al perder el contexto y vuelta a WebGL2 al restaurarlo. |
-| Móvil | Lienzo vertical y diálogo de exportación a 390 × 844 sin desbordamiento horizontal. |
-| Portables | Compilación de Windows x64, Linux x64 y macOS 13+ Apple Silicon e Intel. La validación en equipos Mac queda pendiente. |
+| Compatibilidad de arte | 66 recetas publicadas con FORMA 1.1, tres por generador. La prueba de Rust compara todos los canales de cada muestra CPU frente al registro original y admite una diferencia máxima de un nivel. |
+| Semillas y render | Secuencia determinista, densidad de color y diferencias entre semillas. La prueba por teselas comprueba píxeles idénticos dentro del área compartida. |
+| Interfaz Rust/WebAssembly | Los 22 generadores en WebGL2, recuperación con Canvas 2D, navegación móvil, controles, variantes, comparación y persistencia. |
+| Bibliotecas | Colecciones y recetas del esquema 1, límites, conflictos de nombres y paletas individuales. |
+| Exportación | PNG, JPEG y WebP a tamaño final. Worker Rust/WebAssembly, exportación 8K, cancelación y reintento. |
+| Portables | Windows x64, Linux x64 y macOS 13+ para Apple Silicon e Intel. Los ZIP incluyen permisos ejecutables y sumas SHA-256. |
 
-## Galería
+La galería de 110 composiciones se conserva como referencia visual. Las capturas de la interfaz y las muestras de los cuatro estilos cromáticos se generan con la compilación Rust. [Galería](validacion/galeria.png) · [Captura de escritorio](validacion/estudio.png) · [Vista móvil](validacion/movil.png) · [Ajustes móviles](validacion/movil-ajustes.png)
 
-Se renderizaron **110 composiciones en WebGL2** con los 22 generadores y cinco combinaciones de semilla y formato por generador. Las combinaciones cubren 3:2, 16:9, 21:9, 9:16 y 1:1. Todas superaron el umbral de dispersión de luminancia de la prueba. La comparación por teselas conservó los canales de color dentro de un nivel en la receta evaluada.
+Para verificar el motor, ejecuta `cargo test --locked -p forma-core`. Compila el escritorio y ejecuta `npm run test:e2e` para probarlo en Chromium. `npm run test:gallery` verifica los 22 shaders en WebGL2 y genera capturas nuevas. [Compilación](desktop.md) · [Pruebas de compatibilidad](../rust/core/tests/compatibility.rs)
 
-- [Galería de 110 composiciones](validacion/galeria.png)
-- [Captura de escritorio](validacion/estudio.png)
-- [Lienzo móvil](validacion/movil.png) y [ajustes móviles](validacion/movil-ajustes.png)
-- [Mediciones por render](validacion/metricas.json)
-
-Los tiempos de render incluyen una lectura de píxeles para medir luminancia. Dependen del equipo, el navegador, el backend, la resolución y la receta. La selección personal de fondos y su evaluación al tamaño de pantalla final siguen en el roadmap. [Revisión artística](roadmap.md#revisión-artística)
-
-## Reproducir
-
-`npm test` comprueba el motor y `npm run test:e2e` ejecuta las pruebas de navegador. `npm run test:gallery` guarda las capturas y las métricas en `test-results/`. Tras compilar escritorio, `node --experimental-strip-types scripts/check-seed-parity.mjs` verifica la paridad de semillas. [Pruebas contra el ejecutable](desktop.md#alcance-del-port)
-
-Los resultados del proyecto original se conservan en la revisión de noviembre. [Informe del 19 de noviembre de 2026](revision-2026-11-19/INFORME.txt)
+Los resultados anteriores se conservan en el [informe del 19 de noviembre de 2026](revision-2026-11-19/INFORME.txt).

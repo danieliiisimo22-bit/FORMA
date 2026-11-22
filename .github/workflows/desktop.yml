@@ -1,6 +1,7 @@
-name: Desktop preview
-
+name: Rust desktop
 on:
+  push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -8,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  desktop:
+  portable:
     strategy:
       fail-fast: false
       matrix:
@@ -16,34 +17,75 @@ jobs:
           - runner: windows-latest
             platform: windows-x64
             binary: forma.exe
+            bindgen: x86_64-pc-windows-msvc
+            bindgen_sha: 844d23f1b56097549b936dd2e0d561fadebc1e8c9e985d5068b6b919654104ad
           - runner: macos-15
             platform: macos-arm64
             binary: forma
+            bindgen: aarch64-apple-darwin
+            bindgen_sha: b90ddb9357f584b1af897d58ad77e4cce2b48fc17e2a967bc249a87f72809444
           - runner: macos-15-intel
             platform: macos-x64
             binary: forma
+            bindgen: x86_64-apple-darwin
+            bindgen_sha: eb209c115b7cb95832423c1aa3f4d06d6c53f63ef74fc4b6fb79ef0b2eea5f10
           - runner: ubuntu-24.04
             platform: linux-x64
             binary: forma
+            bindgen: x86_64-unknown-linux-musl
+            bindgen_sha: 9687f3bb551b9f66f37ed32a40d7913a00f7962db653054e56857bc306c3227f
     runs-on: ${{ matrix.runner }}
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '13.0'
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - run: rustup update stable
+      - run: rustup target add wasm32-unknown-unknown
+      - name: Install verified wasm-bindgen
+        shell: pwsh
+        env:
+          BINDGEN_TARGET: ${{ matrix.bindgen }}
+          BINDGEN_SHA: ${{ matrix.bindgen_sha }}
+        run: |
+          $distribution = "wasm-bindgen-0.2.130-$env:BINDGEN_TARGET"
+          $archive = Join-Path $env:RUNNER_TEMP "$distribution.tar.gz"
+          Invoke-WebRequest -Uri "https://github.com/wasm-bindgen/wasm-bindgen/releases/download/0.2.130/$distribution.tar.gz" -OutFile $archive
+          if ((Get-FileHash $archive -Algorithm SHA256).Hash -ne $env:BINDGEN_SHA) { throw 'Invalid wasm-bindgen checksum' }
+          tar -xf $archive -C $env:RUNNER_TEMP
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Join-Path $env:RUNNER_TEMP $distribution | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+      - run: cargo run --locked -p forma-build -- desktop
+      - name: Verify embedded studio
+        shell: pwsh
+        run: |
+          $binary = "./target/release/${{ matrix.binary }}"
+          & $binary --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $start = @{ FilePath = $binary; ArgumentList = '--no-open','--port','56148'; PassThru = $true }
+          if ($IsWindows) { $start.WindowStyle = 'Hidden' }
+          $server = Start-Process @start
+          try {
+            for ($attempt = 0; $attempt -lt 30; $attempt++) {
+              try { $web = Invoke-WebRequest 'http://127.0.0.1:56148/' -TimeoutSec 2; break }
+              catch { Start-Sleep -Milliseconds 500 }
+            }
+            if ($web.StatusCode -ne 200 -or $web.Content -notmatch 'Generative Art Studio') { throw 'Falta el estudio.' }
+            $wasm = Invoke-WebRequest 'http://127.0.0.1:56148/forma_studio_bg.wasm' -Method Head
+            if ($wasm.Headers['Content-Type'] -ne 'application/wasm') { throw 'Falta WebAssembly.' }
+          } finally {
+            Stop-Process -Id $server.Id -ErrorAction SilentlyContinue
+          }
+      - if: runner.os == 'Windows'
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
-      - run: rustup target add wasm32-unknown-unknown
-      - run: npm ci
-      - run: npm run build:desktop
-      - run: node --experimental-strip-types scripts/check-seed-parity.mjs
+      - if: runner.os == 'Windows'
+        run: npm ci
       - if: runner.os == 'Windows'
         run: npx playwright install chromium
       - if: runner.os == 'Windows'
         run: npm run test:e2e
-        env:
-          FORMA_DESKTOP: '1'
-      - if: runner.os == 'Windows'
-        run: npm run test:gallery
       - uses: actions/upload-artifact@v4
         with:
           name: FORMA-${{ matrix.platform }}

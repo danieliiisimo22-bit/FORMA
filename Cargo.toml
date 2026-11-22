@@ -1,3 +1,8 @@
 [workspace]
-members = ["rust/core", "rust/desktop"]
+members = ["rust/core", "rust/desktop", "rust/studio", "rust/build"]
 resolver = "3"
+
+[workspace.package]
+version = "1.2.0-preview.1"
+edition = "2024"
+license = "MIT"

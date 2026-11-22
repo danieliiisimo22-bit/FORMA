@@ -1,5 +1,4 @@
-name: Build and test
-
+name: Rust studio
 on:
   push:
     branches: [main]
@@ -10,34 +9,10 @@ permissions:
   contents: read
 
 jobs:
-  web:
-    runs-on: ubuntu-latest
+  core:
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
-
-  macos:
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-      - run: npm ci
-      - run: npm run build:macos
-      - run: |
-          xcrun lipo release/FORMA.app/Contents/MacOS/FORMA -verify_arch arm64
-          xcrun lipo release/FORMA.app/Contents/MacOS/FORMA -verify_arch x86_64
-          codesign --verify --strict release/FORMA.app
-      - uses: actions/upload-artifact@v4
-        with:
-          name: FORMA-macOS-universal
-          path: release/FORMA-*-macOS-universal.zip
-          if-no-files-found: error
+      - run: rustup update stable
+      - run: cargo fmt --all --check
+      - run: cargo test --locked -p forma-core -p forma-build

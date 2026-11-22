@@ -1,0 +1,11 @@
+vec2 p=vec2(x,y)*(1.7+a*4.0+k*1.7)+vec2(0.26,0.51);
+    vec2 cell=floor(p), f=fract(p);
+    float h=hash(cell+floor(s*19.0));
+    if(h<c*0.34) return 0.89;
+    if(h<0.50) f.x=1.0-f.x;
+    if(h>0.75) f.y=1.0-f.y;
+    float arc=length(f);
+    float shape=h>0.56 ? step(f.y,f.x) : step(arc,0.35+b*0.57);
+    float edge=min(min(f.x,1.0-f.x),min(f.y,1.0-f.y));
+    if(edge<d*0.09) return 0.89;
+    return mix(0.10+h*0.36,0.58+h*0.36,shape);

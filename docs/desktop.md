@@ -1,60 +1,29 @@
-# FORMA 1.1.0-preview.2 · Escritorio
+# FORMA de escritorio
 
-FORMA se ejecuta como un servidor Rust que abre el navegador predeterminado en `http://127.0.0.1:56144`. El ejecutable incluye todos los recursos y puede funcionar sin conexión. Deja su ventana de terminal abierta mientras trabajas y usa `Ctrl+C` para cerrarlo. Si el navegador no se abre automáticamente, escribe la dirección en su barra.
+El lanzador Rust sirve los archivos embebidos en `http://127.0.0.1:56144/` y abre el navegador predeterminado. Deja la terminal abierta mientras trabajas y usa `Ctrl+C` para cerrar. `--no-open` inicia solo el servidor y `--version` imprime la versión. El puerto predeterminado conserva el origen de almacenamiento de las versiones portables de FORMA 1.1.
 
-## Windows
+## Ejecutar los portables
 
-En el paquete portable Windows x64, abre **Iniciar FORMA.cmd** o **forma.exe**. No necesitas instalar Node.js ni Rust para ejecutar el paquete.
+Extrae el ZIP de tu plataforma. En Windows x64, abre **Iniciar FORMA.cmd** o **forma.exe**. En Linux x64 y macOS 13+, ejecuta `./forma` desde el directorio extraído. En macOS hay compilaciones separadas para Apple Silicon e Intel. Si el extractor omite los permisos en Unix, usa `chmod +x forma`. Los binarios de macOS están publicados como vista previa sin notarización de Apple. [Paquetes](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.1)
 
-Para compilar desde el repositorio usa Node.js 22.12 o posterior, npm, Rust estable con rustup y Visual Studio Build Tools con el compilador C++ y el Windows SDK. En PowerShell, ejecuta desde la raíz:
+## Compilar
 
-```powershell
-.\Preparar.ps1
-.\Compilar.ps1
-```
-
-El ejecutable queda en `target/release/forma.exe`. La versión web de desarrollo se inicia con `npm run dev`.
-
-## macOS y Linux
-
-Con Node.js 22.12 o posterior, npm, Rust estable con rustup y el compilador del sistema, ejecuta:
+Instala Rust estable con rustup, el compilador del sistema y las herramientas siguientes.
 
 ```sh
 rustup target add wasm32-unknown-unknown
-npm ci
-npm run build:desktop
-./target/release/forma
+cargo install wasm-bindgen-cli --locked --version 0.2.130
+cargo run --locked -p forma-build -- desktop
 ```
 
-En macOS instala primero las Command Line Tools de Xcode si faltan. En Linux el lanzamiento automático utiliza el navegador predeterminado de la sesión gráfica. El mismo ejecutable acepta `--no-open` para iniciar solo el servidor. Para ejecutar un binario descargado o extraído, verifica que tenga permiso de ejecución (`chmod +x forma`).
+En Windows se requiere Visual Studio Build Tools con C++ y Windows SDK. Usa `Preparar.ps1` y `Compilar.ps1` desde PowerShell. En macOS se requieren las herramientas de línea de comandos de Xcode. El ejecutable queda en `target/release/`.
 
-El [workflow de escritorio](../.github/workflows/desktop.yml) prepara artefactos para Windows x64, macOS Apple Silicon e Intel y Linux x64. La aplicación Swift/WebKit sigue disponible con `npm run build:macos`.
+El comando `cargo run --locked -p forma-build -- web` compila solo el sitio. Sirve `target/forma-web/` por HTTP con el tipo `application/wasm` para WebAssembly. Las pruebas de navegador usan Playwright y ejecutan el portable en un puerto de prueba independiente.
 
-La entrega incluye ZIP independientes para Windows x64, Linux x64 y macOS 13 o posterior (Apple Silicon e Intel), un ZIP que reúne los cuatro paquetes y sumas SHA-256. La compilación para Linux usa musl. Las compilaciones de macOS se generaron de forma cruzada y quedan pendientes de validación de ejecución en un Mac y de notarización para distribución. [Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.1.0-preview.2)
+## Empaquetar
 
-Para empaquetar los cuatro binarios ya compilados, ejecuta `python scripts/package-desktop.py` con Python 3.11 o posterior. El comando toma la versión de `rust/desktop/Cargo.toml` y deja los ZIP y las sumas en `release/<versión>/`. El binario de Windows se toma de `target/release/forma.exe` y los demás de sus directorios de target (`aarch64-apple-darwin`, `x86_64-apple-darwin` y `x86_64-unknown-linux-musl`).
+El empaquetador también está escrito en Rust. Una vez disponibles los cuatro ejecutables, `cargo run --locked -p forma-build -- package` crea los ZIP y las sumas SHA-256 en `release/<versión>/`. Usa `target/release/forma.exe` para Windows o el binario bajo su target MSVC y espera los demás en los targets `aarch64-apple-darwin`, `x86_64-apple-darwin` y `x86_64-unknown-linux-musl`. El workflow compila en ejecutores nativos de cada arquitectura. [GitHub Actions](../.github/workflows/desktop.yml)
 
-## Bibliotecas y revisión en Windows
+## Conservar la biblioteca
 
-En **Mis recetas**, exporta la biblioteca del navegador o equipo anterior y usa **Importar JSON** en la nueva instancia. También puedes importar los archivos creados con **Exportar paleta**. El almacenamiento se comparte entre pestañas del mismo navegador y origen. La versión de escritorio usa un origen distinto del servidor de desarrollo y de la aplicación Swift, por lo que se transfiere la biblioteca por JSON.
-
-Cada colección admite 96 elementos. Si una importación excede el límite o contiene un nombre existente con contenido distinto, FORMA muestra el motivo y conserva la biblioteca. Los nombres y contenidos idénticos se incorporan una sola vez.
-
-Para la revisión de fondos, compara las familias y variantes en formatos horizontal, ultrapanorámico y vertical. Guarda las composiciones que usarías y comprueba su encuadre al exportarlas. Ese resultado alimentará las siguientes etapas del roadmap, junto con la recuperación de bibliotecas y la validación de sesiones largas.
-
-## Alcance del port
-
-Se utilizó [rust-anything 2.1.0](https://github.com/erkamyaman/rust-anything/tree/v2.1.0) para mapear las unidades del proyecto. La primera unidad portada es la mezcla determinista de 32 bits del generador de semillas en `rust/core`. FORMA de escritorio carga ese módulo en la interfaz y el worker de exportación. El generador TypeScript sirve de referencia para comparar las secuencias y mantiene el modo web independiente. Los generadores visuales y shaders siguen utilizando el motor original.
-
-Después de compilar escritorio, comprueba la paridad y ejecuta la suite de Chromium contra el binario:
-
-```powershell
-node --experimental-strip-types scripts/check-seed-parity.mjs
-npx playwright install chromium
-$env:FORMA_DESKTOP = '1'
-npm run test:e2e
-```
-
-La prueba de galería importa módulos fuente de Vite. Para ejecutarla, abre una sesión de terminal sin `FORMA_DESKTOP` y usa `npm run test:gallery`.
-
-El código y ambos archivos de bloqueo se guardan en Git. Los ejecutables portables, dependencias, resultados de pruebas y bibliotecas personales quedan fuera del historial.
+La versión conserva el esquema 1 de receta, biblioteca y paleta. Usa **Mis recetas → Exportar biblioteca** para guardar una copia y **Importar JSON** para llevarla a otro navegador o equipo. La importación comprueba límites y nombres repetidos antes de guardar toda la colección.
