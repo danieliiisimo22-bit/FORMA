@@ -1,10 +1,23 @@
 # FORMA de escritorio
 
-El lanzador Rust sirve los archivos embebidos en `http://127.0.0.1:56144/` y abre el navegador predeterminado. Deja la terminal abierta mientras trabajas y usa `Ctrl+C` para cerrar. `--no-open` inicia solo el servidor y `--version` imprime la versión. El puerto predeterminado conserva el origen de almacenamiento de las versiones portables de FORMA 1.1.
+El lanzador Rust sirve los archivos embebidos en `http://127.0.0.1:56144/` y abre el navegador predeterminado. Deja la terminal abierta mientras trabajas y usa `Ctrl+C` para cerrar. `--no-open` inicia solo el servidor y `--version` imprime la versión.
+
+Si el puerto está ocupado, el lanzador avisa y termina. Cierra la instancia anterior o selecciona otro puerto con `--port <puerto>`. El navegador mantiene una biblioteca independiente para cada puerto.
 
 ## Ejecutar los portables
 
-Extrae el ZIP de tu plataforma. En Windows x64, abre **Iniciar FORMA.cmd** o **forma.exe**. En Linux x64 y macOS 13+, ejecuta `./forma` desde el directorio extraído. En macOS hay compilaciones separadas para Apple Silicon e Intel. Si el extractor omite los permisos en Unix, usa `chmod +x forma`. Los binarios de macOS están publicados como vista previa sin notarización de Apple. [Paquetes](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2)
+Extrae el ZIP de tu plataforma. En Windows x64, abre **Iniciar FORMA.cmd** o **forma.exe**. En Linux x64 y macOS 13+, ejecuta `./forma` desde el directorio extraído. Si el extractor omite los permisos en Unix, usa `chmod +x forma`. Los ejecutables de Windows se distribuyen sin firma y los de macOS sin notarización. [Guía de macOS](macos.md)
+
+## Verificar un ZIP
+
+Sitúate en la carpeta de descarga. Calcula la suma del ZIP elegido y
+compárala con la línea del mismo archivo en `SHA256SUMS.txt`.
+
+| Sistema | Comando |
+| --- | --- |
+| Windows | `Get-FileHash -Algorithm SHA256 -LiteralPath '<archivo.zip>'` |
+| macOS | `shasum -a 256 '<archivo.zip>'` |
+| Linux | `sha256sum '<archivo.zip>'` |
 
 ## Compilar
 
@@ -26,4 +39,4 @@ El empaquetador también está escrito en Rust. Una vez disponibles los cuatro e
 
 ## Conservar la biblioteca
 
-La versión conserva el esquema 1 de receta, biblioteca y paleta. Usa **Mis recetas → Exportar biblioteca** para guardar una copia y **Importar JSON** para llevarla a otro navegador o equipo. La importación comprueba límites y nombres repetidos antes de guardar toda la colección.
+La sesión, los favoritos, las recetas y las paletas se guardan en el navegador. Borrar los datos del sitio elimina la copia guardada allí. Usa **Mis recetas → Exportar biblioteca** para guardar un respaldo y **Importar JSON** para recuperarlo en otro puerto, navegador o equipo. La importación comprueba límites y nombres repetidos antes de guardar toda la colección.

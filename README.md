@@ -4,7 +4,7 @@
 
 Estudio local para crear fondos y arte abstracto procedural. **Rust** implementa la interfaz, los 22 generadores, las paletas, la biblioteca y la exportación. El navegador ejecuta el estudio como **WebAssembly** y dibuja con **WebGL2 y GLSL**, con respaldo Canvas 2D. El lanzador Rust incorpora todos los recursos.
 
-[Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2) · [English README](README.en.md) · [Roadmap](docs/roadmap.md) · [Licencia MIT](LICENSE)
+[Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2) · [English README](README.en.md) · [Licencia MIT](LICENSE)
 
 ![FORMA con la espiral, el lienzo y los controles de composición](docs/validacion/estudio-espiral.png)
 
@@ -19,13 +19,15 @@ Descomprime el ZIP de tu plataforma. La descarga combinada incluye los cuatro ej
 | macOS 13+ Intel | `macOS-Intel.zip` | Ejecuta `./forma` en Terminal. |
 | Linux x64 | `Linux-x64.zip` | Ejecuta `./forma` en una terminal. |
 
-El navegador se conecta a `http://127.0.0.1:56144/`. Mantén la terminal abierta y usa `Ctrl+C` para salir. Los ZIP de macOS son de vista previa y carecen de notarización de Apple. [Guía de escritorio](docs/desktop.md)
+El navegador se conecta a `http://127.0.0.1:56144/`. Mantén la terminal abierta y usa `Ctrl+C` para salir. [Arranque y verificación de los ZIP](docs/desktop.md)
 
 ## Crear una composición
 
 Elige un estilo en **Biblioteca**. Ajusta la paleta, el encuadre y los parámetros en **Simple** o **Estudio**. Cambia la semilla con **Generar**, o explora combinaciones con **Nueva variante**, **Mutar composición** y **Comparar composiciones**.
 
-FORMA incluye 36 paletas, edición HEX, extracción de color y bloqueos individuales. Guarda la sesión, los favoritos y las recetas en el almacenamiento del navegador. **Mis recetas** permite importar las bibliotecas de FORMA 1.1 y exportar recetas o colecciones JSON. Exporta imágenes sRGB en PNG, JPEG o WebP con tamaños de hasta 8192 píxeles por lado y 34 megapíxeles, según la memoria del equipo.
+FORMA incluye 36 paletas, edición HEX, extracción de color y bloqueos individuales. La sesión, los favoritos y las recetas se guardan en el navegador. Usa **Mis recetas → Exportar biblioteca** para guardar una copia en JSON.
+
+Exporta imágenes sRGB en PNG, JPEG o WebP con tamaños de hasta 8192 píxeles por lado y 34 megapíxeles, según la memoria del equipo.
 
 | Cintas de luz | Nácar |
 | --- | --- |

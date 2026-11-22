@@ -1,5 +1,10 @@
 # FORMA en macOS
 
-Elige el ZIP **macOS-Apple-Silicon** en los Mac con chip de la serie M y **macOS-Intel** en equipos Intel. Los portables requieren macOS 13 o posterior. Extrae el archivo, abre Terminal en su carpeta y ejecuta `./forma`. El lanzador Rust abre el mismo estudio que en Windows y Linux. [Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2) · [Guía de escritorio](desktop.md)
+Se requiere macOS 13 o posterior. Elige el ZIP `macOS-Apple-Silicon` para
+equipos con chip de la serie M o `macOS-Intel` para equipos Intel.
 
-La antigua aplicación Swift/WebKit permanece en el historial de la versión 1.0.0. Para trasladar una biblioteca de esa aplicación al portable actual, expórtala en JSON e impórtala en **Mis recetas**. [Versión anterior](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.0.0)
+Extrae el ZIP, abre Terminal en la carpeta extraída y ejecuta `./forma`.
+El estudio se abre en el navegador. Mantén Terminal abierta durante la
+sesión. Los portables se distribuyen sin notarización de Apple.
+
+[Compilación, sumas SHA-256 y bibliotecas](desktop.md)

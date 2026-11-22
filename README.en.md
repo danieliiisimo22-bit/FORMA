@@ -8,7 +8,7 @@ A local procedural art studio for abstract compositions and wallpapers. **Rust**
 
 Download the ZIP for Windows x64, macOS 13+ (Apple Silicon or Intel), or Linux x64. Extract it and launch `forma.exe` on Windows or run `./forma` in a terminal on macOS or Linux. Keep the terminal open while using the studio at `http://127.0.0.1:56144/`. The macOS binaries are previews distributed without Apple notarization. [Desktop guide](docs/desktop.md)
 
-Pick a style in **Biblioteca** and adjust its controls in **Simple** or **Estudio**. FORMA includes deterministic seeds, 36 palettes, per-color and parameter locks, favorites, and side-by-side comparison. It imports existing schema 1 recipes and libraries and exports PNG, JPEG, or WebP in 8-bit sRGB. [Gallery](docs/validacion/galeria.png) · [Generator catalog](docs/generators.md)
+Pick a style in **Biblioteca** and adjust its controls in **Simple** or **Estudio**. FORMA includes deterministic seeds, 36 palettes, per-color and parameter locks, favorites, and side-by-side comparison. Save a JSON backup from **Mis recetas → Exportar biblioteca**. Export PNG, JPEG, or WebP in 8-bit sRGB. [Gallery](docs/validacion/galeria.png) · [Generator catalog](docs/generators.md)
 
 With stable Rust, run:
 

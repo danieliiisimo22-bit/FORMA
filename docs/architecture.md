@@ -2,17 +2,20 @@
 
 | Módulo | Responsabilidad |
 | --- | --- |
-| `rust/core` | Semillas, 22 campos de composición, muestreo CPU, color OKLab, recetas, estado, biblioteca y dimensiones de exportación |
-| `rust/studio` | Interfaz y eventos del navegador, persistencia local, adaptación de WebGL2 y Canvas 2D, exportación por teselas y cancelación |
-| `rust/desktop` | Servidor local Rust, apertura del navegador y recursos embebidos |
-| `rust/build` | Compilación del sitio y el ejecutable, ZIP portables y sumas SHA-256 |
+| `rust/core` | Generadores, semillas, color OKLab, recetas, biblioteca y renderizado CPU |
+| `rust/studio` | Interfaz WebAssembly, persistencia en el navegador, WebGL2 y exportación |
+| `rust/desktop` | Servidor HTTP local y recursos embebidos |
+| `rust/build` | Compilación web y de escritorio, paquetes portables y sumas SHA-256 |
 | `web` | Documento inicial, estilos y carga de WebAssembly en la página y su worker |
-| `rust/core/src/shaders` | Shaders GLSL de los 22 campos y del pipeline WebGL2 |
 
-La interfaz construye el DOM desde Rust compilado a WebAssembly. La receta validada alimenta el renderizador y la biblioteca. Las imágenes se exportan con el mismo campo y parámetros que la vista previa. El worker ejecuta Rust/WebAssembly y usa el codificador del navegador para PNG, JPEG o WebP. Hay un camino Canvas 2D en Rust para equipos donde WebGL2 falla.
+## Renderizado
 
-Los dos archivos de carga JavaScript y el enlace generado por `wasm-bindgen` conectan el navegador a WebAssembly. HTML, CSS y GLSL usan los formatos que procesan los navegadores y WebGL. Las pruebas de navegador son JavaScript y Node.js queda en la suite de desarrollo.
+Una receta validada define el generador, la semilla, la paleta, la composición y el acabado. La interfaz la pasa a WebGL2, que ejecuta los shaders de `rust/core/src/shaders`. Si WebGL2 deja de estar disponible, el motor Rust calcula los píxeles y Canvas 2D los presenta.
 
-## Compatibilidad de la migración
+El worker de exportación renderiza la misma receta por teselas a la resolución elegida y entrega el resultado al codificador del navegador. PNG, JPEG y WebP se exportan en sRGB de 8 bits por canal.
 
-`rust-anything analyze --whole-app` se usó para inventariar el código y ordenar el port de motor, paletas, recetas, estado, interfaz y worker. Las pruebas Rust reproducen **66 recetas y sus píxeles de referencia** extraídos de FORMA 1.1. El esquema JSON y la versión de cada algoritmo se conservan. [Pruebas de compatibilidad](../rust/core/tests/compatibility.rs) · [Verificación de navegador](validation.md)
+## Servidor y biblioteca
+
+El ejecutable enlaza con `127.0.0.1`, exige una única cabecera `Host` igual a la dirección y puerto del servidor, y acepta `GET` y `HEAD` para servir archivos embebidos. El servidor carece de rutas de escritura.
+
+La sesión y las colecciones se guardan en `localStorage` bajo el origen del navegador. Recetas, paletas y bibliotecas usan el esquema JSON 1.
