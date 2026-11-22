@@ -90,7 +90,7 @@ describe('color y recetas', () => {
   })
 
   it('valida recetas serializadas y rechaza versiones o valores incompatibles', () => {
-    expect(generators).toHaveLength(12)
+    expect(generators).toHaveLength(22)
     for (const preset of presets) expect(parseRecipe(JSON.parse(JSON.stringify(preset)))).toEqual(preset)
     expect(() => parseRecipe({ ...initialRecipe, algorithm: 2 })).toThrow()
     expect(() => parseRecipe({ ...initialRecipe, seed: -1 })).toThrow()

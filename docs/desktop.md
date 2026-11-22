@@ -1,4 +1,4 @@
-# FORMA 1.1 · Vista previa de escritorio
+# FORMA 1.1.0-preview.2 · Escritorio
 
 FORMA se ejecuta como un servidor Rust que abre el navegador predeterminado en `http://127.0.0.1:56144`. El ejecutable incluye todos los recursos y puede funcionar sin conexión. Deja su ventana de terminal abierta mientras trabajas y usa `Ctrl+C` para cerrarlo. Si el navegador no se abre automáticamente, escribe la dirección en su barra.
 
@@ -30,7 +30,9 @@ En macOS instala primero las Command Line Tools de Xcode si faltan. En Linux el 
 
 El [workflow de escritorio](../.github/workflows/desktop.yml) prepara artefactos para Windows x64, macOS Apple Silicon e Intel y Linux x64. La aplicación Swift/WebKit sigue disponible con `npm run build:macos`.
 
-La entrega local incluye un ZIP de Windows x64 y archivos TAR.GZ para Linux x64 y macOS 13 o posterior, con paquetes separados para Apple Silicon e Intel. En Linux se comprobó el arranque y el contenido HTTP en WSL. En macOS se verificaron las arquitecturas de los binarios obtenidos por compilación cruzada. Queda pendiente probarlos en Mac y completar la firma de distribución.
+La entrega incluye ZIP independientes para Windows x64, Linux x64 y macOS 13 o posterior (Apple Silicon e Intel), un ZIP que reúne los cuatro paquetes y sumas SHA-256. La compilación para Linux usa musl. Las compilaciones de macOS se generaron de forma cruzada y quedan pendientes de validación de ejecución en un Mac y de notarización para distribución. [Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.1.0-preview.2)
+
+Para empaquetar los cuatro binarios ya compilados, ejecuta `python scripts/package-desktop.py` con Python 3.11 o posterior. El comando toma la versión de `rust/desktop/Cargo.toml` y deja los ZIP y las sumas en `release/<versión>/`. El binario de Windows se toma de `target/release/forma.exe` y los demás de sus directorios de target (`aarch64-apple-darwin`, `x86_64-apple-darwin` y `x86_64-unknown-linux-musl`).
 
 ## Bibliotecas y revisión en Windows
 

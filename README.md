@@ -1,57 +1,68 @@
+<p align="center"><img src="public/forma.svg" alt="" width="64" height="64"></p>
+
 # FORMA — Generative Art Studio
 
-Estudio de arte abstracto procedural para el navegador. Genera y exporta imágenes localmente con un motor determinista, WebGL2 y un respaldo Canvas 2D. La aplicación funciona sin cuentas, telemetría, servicios externos ni modelos generativos.
+Estudio de arte abstracto procedural para crear fondos y composiciones reproducibles. Genera, edita y exporta localmente, con controles sencillos y un modo Estudio para ajustar cada algoritmo. **Rust** ejecuta el lanzador de escritorio y la rutina de semillas por WebAssembly. **TypeScript, React y GLSL** componen la interfaz y el motor gráfico.
 
-[English README](README.en.md) · [Arquitectura](docs/architecture.md) · [Guía de generadores](docs/generators.md) · [Validación](docs/validation.md)
+[Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.1.0-preview.2) · [English README](README.en.md) · [Roadmap](docs/roadmap.md) · [Licencia MIT](LICENSE)
 
-![FORMA en escritorio](docs/validacion/estudio.png)
+![Interfaz del estudio FORMA con el lienzo, la biblioteca y los controles de composición](docs/validacion/estudio.png)
 
-La vista previa 1.1 incluye un ejecutable Rust que abre el estudio en el navegador y utiliza Rust/WebAssembly para las semillas. La interfaz React/TypeScript y el renderizado WebGL2/Canvas 2D se comparten con la versión web. Consulta la [guía de escritorio](docs/desktop.md).
+## Descargar y abrir
 
-Para continuar el mismo proyecto entre el Mac M1 y el Mac M4, consulta la [nota de continuidad](CONTINUIDAD.txt). La [revisión del 19 de noviembre de 2026](docs/revision-2026-11-19/INFORME.txt) recoge las pruebas y las limitaciones observadas en el M1.
+La versión **1.1.0-preview.2** ofrece cuatro ejecutables portables. Usa el ZIP de tu plataforma o **Todos-los-sistemas.zip** para obtenerlos juntos. Requiere un navegador moderno. Una vez extraído, funciona localmente sin instalar Node.js o Rust y sin conexión a Internet.
 
-La [revisión del código](docs/revision-2026-11-19/REVISION-CODIGO.txt) documenta el estado de la versión original. Esta vista previa corrige la importación al llegar al límite de la biblioteca, admite el JSON de una paleta individual y devuelve el acceso a Ayuda en pantallas estrechas.
+| Sistema | Paquete | Inicio |
+| --- | --- | --- |
+| Windows 64 bits | `Windows-x64.zip` | Abre `Iniciar FORMA.cmd` o `forma.exe`. |
+| macOS 13+ · serie M | `macOS-Apple-Silicon.zip` | Abre Terminal en la carpeta y ejecuta `./forma`. |
+| macOS 13+ · Intel | `macOS-Intel.zip` | Abre Terminal en la carpeta y ejecuta `./forma`. |
+| Linux 64 bits · Intel/AMD | `Linux-x64.zip` | Abre una terminal en la carpeta y ejecuta `./forma`. |
 
-[Instalación en macOS](docs/macos.md) · [Ficha de GitHub](docs/github.md) · [Galería de composiciones](docs/validacion/galeria.png)
+El estudio se abre en `http://127.0.0.1:56144/`. Mantén la terminal abierta y usa `Ctrl+C` para salir. En macOS y Linux, si tu extractor omite los permisos, ejecuta `chmod +x forma`. Los binarios de macOS son de vista previa y carecen de notarización de Apple. [Guía de escritorio](docs/desktop.md)
 
-## Empezar
+## Galería
 
-Requiere Node.js 20.19 o 22.12 en adelante y un navegador moderno.
+Estas muestras se renderizaron en FORMA con las recetas incluidas en **Biblioteca**. Los cuatro estilos se inspiran en pliegues de luz, superficies nacaradas, gradientes granulados y crestas espectrales.
+
+| Cintas de luz · Fluidos | Nácar · Fluidos |
+| --- | --- |
+| ![Cintas procedurales en tonos coral y violeta](docs/validacion/ribbons.png) | ![Ondas de luz en tonos pastel](docs/validacion/nacre.png) |
+| **Difusión de color · Gradientes** | **Relieve espectral · Fluidos** |
+| ![Campo difuso de luz con grano de película](docs/validacion/diffuse.png) | ![Arcos cromáticos con sombras profundas](docs/validacion/spectral.png) |
+
+[Galería de 110 composiciones](docs/validacion/galeria.png) · [Catálogo de 22 generadores](docs/generators.md)
+
+## Crear una composición
+
+1. Abre el desplegable de una familia en **Biblioteca** y elige un estilo. En **Simple**, ajusta color, complejidad, simetría y textura. **Estudio** muestra los parámetros de cada generador.
+2. Usa **Generar** para cambiar la semilla, **Nueva variante** para mover también los parámetros o **Sorpréndeme** para cambiar de familia. **Mutar composición** crea 4, 9 o 16 descendientes y **Comparar composiciones** muestra dos resultados en paralelo.
+3. Guarda con el corazón o usa **Mis recetas** para conservar un preset con nombre. Exporta la obra como PNG, JPEG o WebP, o guarda la receta y su semilla en JSON para volver a editarla.
+
+FORMA incluye 36 paletas, edición HEX, extracción de color y bloqueos individuales. Conserva la última sesión, hasta tres composiciones recientes y tus colecciones en el almacenamiento del navegador. Usa **Mis recetas → Exportar biblioteca** para trasladarlas a otro equipo. El tamaño máximo personalizado es de 8192 píxeles por lado y 34 megapíxeles, sujeto a la memoria disponible. Las imágenes se renderizan a tamaño final en sRGB de 8 bits por canal.
+
+## Compilar desde el código
+
+Requiere Node.js 22.12 o posterior, npm y un navegador actual. La compilación de escritorio añade Rust estable, el target WebAssembly y el compilador del sistema.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Abre la dirección local que imprime Vite. El archivo de bloqueo permite volver a instalar las mismas versiones de dependencias.
-
-1. Elige una familia en **Biblioteca** y pulsa el desplegable de la fila para ver sus estilos.
-2. Ajusta color, complejidad, simetría y textura desde **Simple**. **Estudio** muestra los parámetros del algoritmo activo.
-3. Pulsa **Generar** para cambiar la semilla con los ajustes actuales, **Nueva variante** para variar también algunos parámetros, **Explorar** para recorrer la familia o **Sorpréndeme** para cambiar de familia y buscar otro color.
-4. Abre **Variantes** y pulsa **Mutar composición** para crear 4, 9 o 16 descendientes. Selecciona uno para llevarlo al lienzo o usa **Comparar composiciones** para ver dos resultados a la vez.
-5. Guarda con el corazón o crea un preset con nombre en **Mis recetas**. Usa **Exportar** para obtener la imagen o **Exportar receta** para compartir el estado editable en JSON.
-
-El menú de paletas contiene 32 paletas curadas y permite introducir colores HEX, extraer colores de la obra, bloquear colores individuales y guardar paletas propias. Las variantes mantienen los colores y parámetros bloqueados. La última sesión, el historial visual, las paletas y las recetas se guardan en el almacenamiento del mismo origen del navegador. Exporta la biblioteca JSON para mover tus datos o hacer una copia.
-
-Atajos disponibles en **Ayuda y atajos**. `G` genera, `Ctrl/⌘+Z` deshace, `Ctrl/⌘+Mayús+Z` rehace y `Ctrl/⌘+S` abre las recetas.
-
-## Compilar y probar
+El siguiente comando genera el ejecutable de tu sistema.
 
 ```sh
-npm run build
-npm run preview
-npm test
-npx playwright install chromium
-npm run test:e2e
-npm run test:gallery
+rustup target add wasm32-unknown-unknown
+npm run build:desktop
 ```
 
-`dist/` contiene la aplicación estática compilada. Sírvela por HTTP para habilitar el worker de exportación. Tras instalar las dependencias, FORMA funciona desde el servidor local sin conexión a Internet. En macOS, Playwright detecta Google Chrome si está instalado en `/Applications`. Define `FORMA_BROWSER=chromium` para usar el Chromium de Playwright, o `FORMA_BROWSER=chrome` para usar Chrome instalado en otros sistemas.
+El ejecutable queda en `target/release/`. Para construir el sitio estático, usa `npm run build`. Sirve `dist/` por HTTP para habilitar el worker de exportación. [Arquitectura](docs/architecture.md) · [Compilación por plataforma](docs/desktop.md)
 
-## Exportación
+## Pruebas y contribuciones
 
-PNG, JPEG y WebP de 8 bits por canal en sRGB. Las clases 1080p, 1440p, 4K y 8K parten de un lado corto de 1080, 1440, 2160 y 4320 px y se ajustan a la proporción elegida. La exportación personalizada admite hasta 8192 px por lado y 34 megapíxeles. Algunos navegadores o equipos pueden requerir dimensiones menores. La exportación vuelve a evaluar la receta en cada píxel y comprueba que el navegador haya producido el formato solicitado.
+Ejecuta `npm test` para las pruebas del motor. Con `npx playwright install chromium` y `npm run test:e2e` puedes probar la interfaz, las bibliotecas y la exportación. `npm run test:gallery` genera las muestras y métricas. Para añadir estilos, usa la guía de generadores y conserva la compatibilidad de las recetas ya guardadas. [Validación](docs/validation.md) · [Guía de generadores](docs/generators.md)
 
-## Alcance
+## Licencia
 
-La biblioteca inicial contiene 12 generadores en siete familias. El [catálogo](docs/generators.md) enumera los estilos disponibles y las extensiones pendientes. Distribuido bajo la [licencia MIT](LICENSE).
+Código bajo licencia MIT. Los avisos de terceros se incluyen en cada paquete. [Texto de la licencia](LICENSE) · [Avisos de la interfaz](public/third-party-licenses.txt) · [Avisos de escritorio](docs/licenses/desktop.txt)

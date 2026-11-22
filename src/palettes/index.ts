@@ -36,6 +36,10 @@ const curated = [
   ['Espectro', '#171625', '#443f7a', '#5876ac', '#cf758f', '#ffd588'],
   ['Mediodía', '#422521', '#915028', '#d88428', '#f4bc51', '#fff0b6'],
   ['Mar profundo', '#0e1926', '#1b3444', '#22587b', '#3299a3', '#b9e4de'],
+  ['Neón coral', '#300342', '#830a58', '#f51978', '#684aef', '#b28bff'],
+  ['Luz nacarada', '#6558b4', '#b980dc', '#829de2', '#83dddc', '#e4fff6'],
+  ['Fulgor', '#130e2c', '#5523a0', '#e63db5', '#fc7650', '#ffe7a7'],
+  ['Prisma nocturno', '#08091a', '#1b3469', '#13a096', '#f5d656', '#ff63b9'],
 ] as const
 export const palettes: Palette[] = curated.map(([name, ...colors]) => ({ name, colors }))
 export const paletteByName = new Map(palettes.map((palette) => [palette.name, palette]))

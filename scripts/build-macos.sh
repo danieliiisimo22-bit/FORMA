@@ -19,7 +19,7 @@ mkdir -p "$app/Contents/MacOS" "$resources/web"
 ditto dist "$resources/web"
 cp LICENSE "$resources/LICENSE"
 cp macos/Info.plist "$app/Contents/Info.plist"
-/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $version" "$app/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${version%%-*}" "$app/Contents/Info.plist"
 
 xcrun swiftc -module-cache-path "$CLANG_MODULE_CACHE_PATH" macos/icon.swift -o "$work/forma-icon"
 "$work/forma-icon" "$work/icon.png"

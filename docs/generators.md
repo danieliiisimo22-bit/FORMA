@@ -2,12 +2,12 @@
 
 | Familia | Estilos y técnicas |
 | --- | --- |
-| Gradientes | **Horizonte** superpone campos gaussianos y un velo de ruido. **Iridiscencia** combina ondas y fase angular. |
-| Fluidos | **Seda líquida** pliega una corriente con una envolvente y filamentos. **Vórtice** deforma campos multiescala en coordenadas polares. |
-| Geometría | **Módulos** tesela cuartos de círculo y diagonales. **Arcadas** crea arcos concéntricos con registro de altura por celda. |
+| Gradientes | **Horizonte** superpone campos gaussianos y un velo de ruido. **Iridiscencia** combina ondas y fase angular. **Difusión de color** combina dos campos de luz y grano de película. |
+| Fluidos | **Seda líquida** pliega una corriente con una envolvente y filamentos. **Vórtice** deforma campos multiescala en coordenadas polares. **Cintas de luz** simula pliegues con sombras entre bandas. **Nácar** modela ondas suaves con reflejos especulares. **Relieve espectral** levanta crestas radiales con un foco de luz desplazado. |
+| Geometría | **Módulos** tesela cuartos de círculo y diagonales. **Arcadas** crea arcos concéntricos con registro de altura por celda. **Facetas** construye mosaicos equiláteros con juntas y relieve. **Cubos isométricos** compone tres caras a partir de una retícula hexagonal. **Cintas Truchet** conecta cuartos de círculo entre baldosas. **Figuras** superpone un círculo, cuadrado, triángulo o hexágono con su eco desplazado. |
 | Simetría | **Rosetón** distribuye pétalos y anillos alrededor del centro. |
 | Op Art | **Interferencia** forma batidos entre campos estáticos de líneas. La interfaz avisa sobre la intensidad del patrón. |
-| Orgánicos | **Voronoi** utiliza dos distancias vecinas para modelar membranas. **Topografía** dibuja isocurvas sobre ruido de varias escalas. |
+| Orgánicos | **Voronoi** utiliza dos distancias vecinas para modelar membranas. **Topografía** dibuja isocurvas sobre ruido de varias escalas. **Dunas** crea crestas onduladas y sombras por estratos. **Ramificaciones** combina un tallo curvo con nervaduras alternas y ramas secundarias. |
 | Experimental | **Risografía** superpone dos tramas desplazadas con densidad variable. **Fractura** pliega y gira el plano de forma recursiva. |
 
 ## Añadir un estilo
@@ -21,4 +21,4 @@
 
 ## Extensiones pendientes
 
-La entrega cubre estos doce estilos y diez acabados estéticos. El resto del catálogo conceptual, incluidos Perlin y Simplex, erosión especializada, crecimiento ramificado, glitch y pixel sorting, queda para ampliaciones. Animación procedural, exportación vectorial SVG, 16 bits por canal, procesamiento por lotes y extensiones de terceros quedan fuera de esta versión.
+El estudio incluye 22 estilos y diez acabados estéticos. El encuadre, las variaciones guiadas y la animación figuran entre las próximas etapas. [Roadmap](roadmap.md)

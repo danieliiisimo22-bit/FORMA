@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import { readFile, writeFile } from 'node:fs/promises'
 import { presets } from '../src/presets/recipes'
+import { generatorById } from '../src/generators'
 
 const title = (name: string) => 'Composición ' + name
 const canvas = (page: Page) => page.locator('.stage-frame canvas')
@@ -55,6 +56,50 @@ test('familias, modo Estudio y simetría según compatibilidad', async ({ page }
   await expect(page.getByText('Patrón óptico intenso')).toBeVisible()
 })
 
+test('los ajustes actualizan una miniatura y Deshacer conserva más de tres pasos', async ({ page }) => {
+  const cards = page.getByRole('tabpanel').locator('.film-item')
+  await expect(cards).toHaveCount(3)
+  const titles = await cards.locator('.film-open').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('title')))
+  const slider = page.getByRole('slider', { name: 'Complejidad' })
+  for (let i = 0; i < 5; i++) await slider.press('ArrowRight')
+  await expect(slider).toHaveValue('0.61')
+  expect(await cards.locator('.film-open').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('title')))).toEqual(titles)
+  await expect(cards.first().locator('.film-open')).toHaveAttribute('aria-pressed', 'true')
+
+  for (let i = 0; i < 5; i++) await page.getByRole('button', { name: 'Deshacer', exact: true }).click()
+  await expect(slider).toHaveValue('0.56')
+  await page.getByRole('button', { name: 'Rehacer', exact: true }).click()
+  await expect(slider).toHaveValue('0.57')
+  await page.getByRole('button', { name: 'Guardar favorito', exact: true }).click()
+
+  for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Generar', exact: true }).click()
+  await expect(cards).toHaveCount(3)
+  const recentTitles = await cards.locator('.film-open').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('title')))
+  expect(new Set(recentTitles).size).toBe(3)
+  expect(recentTitles).not.toContain(titles[0])
+  await page.reload()
+  await expect(cards).toHaveCount(3)
+  await page.getByRole('tab', { name: 'Favoritos' }).click()
+  await expect(cards).toHaveCount(1)
+})
+
+test('reduce el historial anterior a tres semillas distintas y conserva la biblioteca', async ({ page }) => {
+  const [current, other, third, fourth] = presets
+  const history = [
+    ...Array.from({ length: 32 }, (_, index) => ({ ...current, complexity: 0.5 - index / 100 })),
+    other, third, fourth, { ...current, seed: 5 },
+  ]
+  const library = { schema: 1, favorites: [fourth], saved: [{ name: 'Creación guardada', recipe: third }], palettes: [] }
+  await page.evaluate((session) => localStorage.setItem('forma-studio.v1', JSON.stringify(session)),
+    { recipe: current, history, library, mode: 'simple' })
+  await page.reload()
+  await waitForSeed(page, current.seed)
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('forma-studio.v1')!))
+  expect(saved.history).toEqual([history[0], other, third])
+  expect(saved.recipe).toEqual(current)
+  expect(saved.library).toEqual(library)
+})
+
 test('variantes, comparar y favoritos', async ({ page }) => {
   await page.getByRole('tab', { name: 'Variantes' }).click()
   await page.getByRole('button', { name: 'Mutar composición' }).click()
@@ -72,6 +117,27 @@ test('variantes, comparar y favoritos', async ({ page }) => {
   await expect(page.getByRole('dialog').getByRole('img')).toHaveCount(2)
   await page.getByRole('button', { name: 'Usar esta composición' }).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
+})
+
+test('explora geometría y conserva la figura elegida al variar y recargar', async ({ page }) => {
+  await page.getByRole('button', { name: 'Geometría', exact: true }).click()
+  for (const name of ['Arcadas', 'Facetas', 'Cubos isométricos', 'Cintas Truchet', 'Figuras', 'Módulos']) {
+    await page.getByRole('button', { name: 'Explorar', exact: true }).click()
+    await expect(page.getByRole('img', { name: title(name) })).toBeVisible()
+  }
+
+  await page.getByRole('button', { name: 'Ver estilos de Geometría' }).click()
+  await page.getByRole('complementary', { name: 'Biblioteca de estilos' })
+    .getByRole('button', { name: 'Figuras', exact: true }).click()
+  const figure = page.getByRole('combobox', { name: 'Figura', exact: true })
+  await figure.selectOption({ label: 'Hexágono' })
+  await page.getByRole('combobox', { name: 'Proporción del lienzo' }).selectOption('9:16')
+  await waitForSeed(page, presets.find((preset) => preset.generator === 'silhouettes')!.seed)
+  await page.getByRole('button', { name: 'Nueva variante' }).click()
+  await expect(figure).toHaveValue('3')
+  await page.reload()
+  await expect(figure).toHaveValue('3')
+  await expect(page.getByRole('combobox', { name: 'Proporción del lienzo' })).toHaveValue('9:16')
 })
 
 test('paletas personalizadas, recarga de recetas e importación de biblioteca', async ({ page }) => {
@@ -204,6 +270,21 @@ test('flujo adaptable sin desbordamiento horizontal', async ({ page }) => {
   await expect(page.getByRole('dialog')).toBeInViewport()
 })
 
+test('los estilos cromáticos se abren desde la biblioteca y usan WebGL2', async ({ page }) => {
+  for (const [family, styles] of [
+    ['Fluidos', ['Cintas de luz', 'Nácar', 'Relieve espectral']],
+    ['Gradientes', ['Difusión de color']],
+  ] as const) {
+    await page.getByRole('button', { name: `Ver estilos de ${family}`, exact: true }).click()
+    for (const name of styles) {
+      await page.getByRole('button', { name, exact: true }).click()
+      const recipe = presets.find((item) => generatorById.get(item.generator)?.name === name)!
+      await waitForSeed(page, recipe.seed)
+      await expect(canvas(page)).toHaveAttribute('data-backend', 'WebGL2')
+    }
+  }
+})
+
 test('galería, estadísticas y comparación de tiles @gallery', async ({ page, browser }, info) => {
   test.setTimeout(60_000)
   await page.setViewportSize({ width: 1480, height: 920 })
@@ -222,7 +303,7 @@ test('galería, estadísticas y comparación de tiles @gallery', async ({ page, 
   await page.setViewportSize({ width: 1470, height: 1000 })
   const stats = await page.evaluate(async ([renderUrl, presetUrl, registryUrl]) => {
     const { Renderer, fullTile } = await import(renderUrl) as typeof import('../src/engine/render')
-    const { presets, mutate } = await import(presetUrl) as typeof import('../src/presets/recipes')
+    const { aspectRatio, presets, mutate } = await import(presetUrl) as typeof import('../src/presets/recipes')
     const { generatorById } = await import(registryUrl) as typeof import('../src/generators')
     const renderer = new Renderer(document.createElement('canvas'))
     const metrics: { generator: string; backend: string; ms: number; deviation: number }[] = []
@@ -236,22 +317,27 @@ test('galería, estadísticas y comparación de tiles @gallery', async ({ page, 
     for (const preset of presets) {
       const group = document.createElement('section')
       group.style.cssText = 'padding:9px;border:1px solid #353536;border-radius:5px'
+      group.dataset.generator = preset.generator
       const heading = document.createElement('h2')
       heading.style.cssText = 'font-size:14px;margin:0 0 7px'
       const generator = generatorById.get(preset.generator)!
       heading.textContent = generator.name + ' · ' + generator.family
       group.append(heading)
       const galleryRow = document.createElement('div')
-      galleryRow.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:7px'
-      for (const recipe of [preset, ...mutate(preset, 1084238715, 2)]) {
+      galleryRow.style.cssText = 'display:grid;grid-template-columns:repeat(5,1fr);gap:7px;align-items:start'
+      const layouts = ['3:2', '16:9', '21:9', '9:16', '1:1'] as const
+      const recipes = [preset, ...mutate(preset, 1084238715, 4)]
+      for (const [index, base] of recipes.entries()) {
+        const recipe = { ...base, aspect: layouts[index] }
         const canvas = document.createElement('canvas')
-        canvas.width = 330
-        canvas.height = 220
+        const ratio = aspectRatio(recipe)
+        canvas.width = Math.round(480 * Math.min(1, ratio))
+        canvas.height = Math.round(480 * Math.min(1, 1 / ratio))
         canvas.style.cssText = 'width:100%;display:block'
         const ctx = canvas.getContext('2d', { alpha: false, willReadFrequently: true })!
         const start = performance.now()
-        const backend = renderer.draw(recipe, fullTile(330, 220), ctx)
-        const px = ctx.getImageData(0, 0, 330, 220).data
+        const backend = renderer.draw(recipe, fullTile(canvas.width, canvas.height), ctx)
+        const px = ctx.getImageData(0, 0, canvas.width, canvas.height).data
         const ms = performance.now() - start
         let sum = 0
         let squareSum = 0
@@ -267,7 +353,7 @@ test('galería, estadísticas y comparación de tiles @gallery', async ({ page, 
         card.style.margin = '0'
         const label = document.createElement('figcaption')
         label.style.cssText = 'font:10px monospace;color:#bbb;margin-top:4px'
-        label.textContent = String(recipe.seed)
+        label.textContent = `${recipe.aspect} · ${recipe.seed}`
         card.append(canvas, label)
         galleryRow.append(card)
       }
@@ -288,8 +374,12 @@ test('galería, estadísticas y comparación de tiles @gallery', async ({ page, 
     return { metrics, mismatch }
   }, ['/src/engine/render.ts', '/src/presets/recipes.ts', '/src/generators/index.ts'])
   await page.screenshot({ path: info.outputPath('galeria.png'), fullPage: true, animations: 'disabled' })
+  for (const id of ['ribbons', 'nacre', 'diffuse', 'spectral']) {
+    const dataUrl = await page.locator(`[data-generator="${id}"] canvas`).first().evaluate((node: HTMLCanvasElement) => node.toDataURL('image/png'))
+    await writeFile(info.outputPath(`${id}.png`), Buffer.from(dataUrl.split(',')[1], 'base64'))
+  }
   await writeFile(info.outputPath('metricas.json'), JSON.stringify(stats, null, 2) + '\n')
-  expect(stats.metrics).toHaveLength(36)
+  expect(stats.metrics).toHaveLength(presets.length * 5)
   expect(stats.metrics.filter((item) => item.backend !== 'WebGL2')).toEqual([])
   expect(stats.metrics.filter((item) => item.deviation < 8)).toEqual([])
   expect(stats.mismatch).toBe(0)

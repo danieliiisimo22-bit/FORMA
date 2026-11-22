@@ -13,7 +13,7 @@ export function createRecipe(generator: Generator, seed: number): Recipe {
     parameters: generator.parameters.map((p) => p.initial) as Recipe['parameters'],
     complexity: 0.56, contrast: 1, saturation: 1,
     symmetry: { mode: 'free', order: 6, axis: 0, phase: 0, perturbation: 0 },
-    texture: { finish: 'fine', amount: 0.17 }, aspect: '3:2', customAspect: [3, 2],
+    texture: { ...(generator.presetTexture ?? { finish: 'fine', amount: 0.17 }) }, aspect: '3:2', customAspect: [3, 2],
     render: { dither: true, mix: 0 },
   }
 }
@@ -32,7 +32,7 @@ export function variant(recipe: Recipe, seed: number, strength = 0.13): Recipe {
   const rng = randomFrom(seed ^ 0xaa94b)
   const parameters = generator.parameters.map((param, index) => {
     const next = recipe.parameters[index] + (rng() - 0.5) * strength
-    if (recipe.parameterLocks.includes(index)) return recipe.parameters[index]
+    if (param.choices || recipe.parameterLocks.includes(index)) return recipe.parameters[index]
     const low = Math.min(param.safe[0], recipe.parameters[index])
     const high = Math.max(param.safe[1], recipe.parameters[index])
     return clamp(next, low, high)
@@ -43,8 +43,9 @@ export function variant(recipe: Recipe, seed: number, strength = 0.13): Recipe {
 export function explore(recipe: Recipe, seed: number): Recipe {
   const rng = randomFrom(seed ^ 0x57d9)
   const options = presets.filter((candidate) => generatorById.get(candidate.generator)!.family === generatorById.get(recipe.generator)!.family)
-  const sibling = recipe.parameterLocks.length ? recipe : options.find((candidate) => candidate.generator !== recipe.generator) ?? recipe
-  const next = variant({ ...recipe, generator: sibling.generator, parameters: sibling.parameters,
+  const current = options.findIndex((candidate) => candidate.generator === recipe.generator)
+  const sibling = recipe.parameterLocks.length || options.length === 1 ? recipe : options[(current + 1) % options.length]
+  const next = variant({ ...recipe, generator: sibling.generator, algorithm: sibling.algorithm, parameters: sibling.parameters,
     symmetry: generatorById.get(sibling.generator)!.symmetry.includes(recipe.symmetry.mode)
       ? recipe.symmetry : { ...recipe.symmetry, mode: 'free' } }, seed, 0.68)
   return { ...next, complexity: 0.27 + rng() * 0.51 }

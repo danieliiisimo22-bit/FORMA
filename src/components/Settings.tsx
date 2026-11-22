@@ -71,6 +71,19 @@ export function Settings({ onPalette, onGenerate, onVariant }: { onPalette: () =
 
       <section className="setting-section">
         <div className="setting-title"><span>Composición</span></div>
+        {generator.parameters.map(({ label, description, choices }, index) => choices && (
+          <label className="field-label" key={label} title={description}>{label}
+            <div className="select-wrap"><select
+              value={Math.min(Math.floor(recipe.parameters[index] * choices.length), choices.length - 1)}
+              onChange={(event) => {
+                const parameters = [...recipe.parameters] as Recipe['parameters']
+                parameters[index] = (Number(event.target.value) + 0.5) / choices.length
+                patch({ parameters })
+              }}>
+              {choices.map((choice, option) => <option key={choice} value={option}>{choice}</option>)}
+            </select><ChevronDown size={14} /></div>
+          </label>
+        ))}
         <Slider label="Complejidad" value={recipe.complexity} onChange={(complexity) => edit((r) => ({ ...r, complexity }))} onCommit={commit} />
         <div className="symmetry-field">
           <span className="field-label">Simetría</span>
@@ -118,7 +131,7 @@ export function Settings({ onPalette, onGenerate, onVariant }: { onPalette: () =
       {studio && <>
         <section className="setting-section">
           <div className="setting-title"><span>{generator.name}</span></div>
-          {generator.parameters.map((param, index) => <Slider key={param.label} label={param.label} hint={param.description}
+          {generator.parameters.map((param, index) => !param.choices && <Slider key={param.label} label={param.label} hint={param.description}
             value={recipe.parameters[index]} locked={recipe.parameterLocks.includes(index)}
             onLock={() => patch({ parameterLocks: toggleIndex(recipe.parameterLocks, index) })}
             onChange={(value) => edit((r) => {

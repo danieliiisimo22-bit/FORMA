@@ -1,5 +1,7 @@
 import type { Generator, Parameter, SymmetryMode } from '../engine/types'
 import { TAU, clamp, fbm, fract, hash, mix, mod, noise, smooth } from '../engine/math'
+import { geometry } from './geometry'
+import { chromatic } from './chromatic'
 
 const { sin, cos, atan2, hypot, floor, abs, exp, min, max, pow } = Math
 const all: readonly SymmetryMode[] = ['free', 'mirror', 'horizontal', 'vertical', 'quadrants', 'radial', 'kaleido']
@@ -412,8 +414,110 @@ const fractal = define({
   },
 })
 
+const dunes = define({
+  id: 'dunes', family: 'Orgánicos', name: 'Dunas', palette: 'Oro viejo', presetSeed: 654703,
+  description: 'Crestas suaves y capas de arena que se pierden en el horizonte.',
+  parameters: [
+    parameter('Capas', 'Cantidad de crestas visibles por debajo del horizonte.', 0.46),
+    parameter('Ondulación', 'Altura y curvatura de las dunas.', 0.60),
+    parameter('Sombra', 'Profundidad de la sombra junto a cada cresta.', 0.56),
+    parameter('Horizonte', 'Posición vertical de las primeras dunas.', 0.42),
+  ],
+  glsl: `
+    float wave=(0.13+b*0.38)*(sin(x*1.42+s+0.86*y)+0.30*cos(x*2.81-y*1.2+s*0.73));
+    float ground=y+0.78-d*1.14-wave;
+    float bands=ground*(1.7+a*3.2+k*1.35);
+    float layer=floor(bands), depth=fract(bands);
+    float light=0.5+0.5*cos(x*1.42+s+0.86*y);
+    float glow=0.5+0.5*cos(x*1.26+s*0.6);
+    float sky=0.44+0.27*exp(-abs(ground)*1.75)*(0.58+0.42*glow);
+    float far=exp(-max(layer,0.0)*0.40);
+    float sand=0.66+0.13*light+0.10*far
+      -(0.16+c*0.35)*exp(-depth*(1.6+light*1.4))*(1.0-0.61*far);
+    sand+=0.028*sin(depth*40.0+x*1.7)*depth*(1.0-depth)*(1.0-far);
+    return mix(sky,sand,smoothstep(-0.008,0.008,ground));
+  `,
+  sample(x, y, a, b, c, d, k, s) {
+    const phase = x * 1.42 + s + 0.86 * y
+    const wave = (0.13 + b * 0.38) * (sin(phase) + 0.30 * cos(x * 2.81 - y * 1.2 + s * 0.73))
+    const ground = y + 0.78 - d * 1.14 - wave
+    const bands = ground * (1.7 + a * 3.2 + k * 1.35)
+    const depth = fract(bands)
+    const light = 0.5 + 0.5 * cos(phase)
+    const glow = 0.5 + 0.5 * cos(x * 1.26 + s * 0.6)
+    const sky = 0.44 + 0.27 * exp(-abs(ground) * 1.75) * (0.58 + 0.42 * glow)
+    const far = exp(-max(floor(bands), 0) * 0.40)
+    const sand = 0.66 + 0.13 * light + 0.10 * far
+      - (0.16 + c * 0.35) * exp(-depth * (1.6 + light * 1.4)) * (1 - 0.61 * far)
+      + 0.028 * sin(depth * 40 + x * 1.7) * depth * (1 - depth) * (1 - far)
+    return mix(sky, sand, smooth(-0.008, 0.008, ground))
+  },
+})
+
+const branches = define({
+  id: 'branches', family: 'Orgánicos', name: 'Ramificaciones', palette: 'Liquen', presetSeed: 802469,
+  description: 'Un tallo curvo del que brotan nervaduras y ramas finas.',
+  parameters: [
+    parameter('Apertura', 'Alcance lateral de las ramas principales.', 0.64),
+    parameter('Curvatura', 'Inclinación de las ramas y curvatura del tallo.', 0.55),
+    parameter('Densidad', 'Número de ramas que salen del tallo.', 0.48),
+    parameter('Grosor', 'Grosor de las nervaduras y del tallo.', 0.55),
+  ],
+  glsl: `
+    float t=(1.16-y)/1.97;
+    float spine=0.24*sin(t*2.6+s)+b*0.42*(t-0.35);
+    float dx=x-spine, reach=abs(dx);
+    float lean=reach*(0.24+b*0.22)+pow(reach,1.6)*0.16;
+    float rows=6.0+c*6.0+k*3.0;
+    float stagger=dx>=0.0?0.28:-0.18;
+    float branch=(t-lean)*rows+stagger;
+    float root=(floor(branch)+0.5-stagger)/rows;
+    float canopy=pow(max(0.0,sin(clamp(root,0.0,1.0)*3.14159265)),0.93);
+    float span=(0.37+a*0.68)*canopy*(1.0-0.28*clamp(root,0.0,1.0));
+    float taper=1.0-smoothstep(0.0,max(span,0.001),reach);
+    float bend=(fract(branch)-0.5)/rows;
+    float width=(0.003+d*0.013)*(0.22+0.78*taper);
+    float rib=1.0-smoothstep(width,width+0.005,abs(bend));
+    float twig=1.0-smoothstep(0.002+d*0.002,0.007+d*0.003,
+      abs((fract(reach*(9.0+4.0*k))-0.5)*0.072+abs(bend)*0.81-0.022));
+    twig*=smoothstep(0.006,0.02,reach)*(1.0-smoothstep(0.033,0.046,abs(bend)));
+    float leaf=max(rib*(0.42+0.46*taper),twig*(0.14+0.42*taper));
+    float growth=smoothstep(0.035,0.16,root)*(1.0-smoothstep(0.86,1.0,root));
+    float stemWidth=(0.012+d*0.021)*(1.0-0.80*clamp(t,0.0,1.0));
+    float stem=(1.0-smoothstep(stemWidth,stemWidth+0.008,reach))*(1.0-smoothstep(0.90,1.0,t));
+    float mist=0.08+0.22*exp(-reach*1.85-abs(t-0.57)*1.60);
+    return mist+max(0.55*stem,leaf*growth*(1.0-smoothstep(0.80,1.0,reach/max(span,0.001))))*0.75;
+  `,
+  sample(x, y, a, b, c, d, k, s) {
+    const t = (1.16 - y) / 1.97
+    const spine = 0.24 * sin(t * 2.6 + s) + b * 0.42 * (t - 0.35)
+    const dx = x - spine
+    const reach = abs(dx)
+    const lean = reach * (0.24 + b * 0.22) + pow(reach, 1.6) * 0.16
+    const rows = 6 + c * 6 + k * 3
+    const stagger = dx >= 0 ? 0.28 : -0.18
+    const branch = (t - lean) * rows + stagger
+    const root = (floor(branch) + 0.5 - stagger) / rows
+    const canopy = pow(max(0, sin(clamp(root) * Math.PI)), 0.93)
+    const span = max(0.001, (0.37 + a * 0.68) * canopy * (1 - 0.28 * clamp(root)))
+    const taper = 1 - smooth(0, span, reach)
+    const bend = abs(fract(branch) - 0.5) / rows
+    const width = (0.003 + d * 0.013) * (0.22 + 0.78 * taper)
+    const rib = 1 - smooth(width, width + 0.005, bend)
+    const twigDistance = abs((fract(reach * (9 + 4 * k)) - 0.5) * 0.072 + bend * 0.81 - 0.022)
+    const twig = (1 - smooth(0.002 + d * 0.002, 0.007 + d * 0.003, twigDistance))
+      * smooth(0.006, 0.02, reach) * (1 - smooth(0.033, 0.046, bend))
+    const leaf = max(rib * (0.42 + 0.46 * taper), twig * (0.14 + 0.42 * taper))
+    const growth = smooth(0.035, 0.16, root) * (1 - smooth(0.86, 1, root))
+    const stemWidth = (0.012 + d * 0.021) * (1 - 0.80 * clamp(t))
+    const stem = (1 - smooth(stemWidth, stemWidth + 0.008, reach)) * (1 - smooth(0.90, 1, t))
+    const mist = 0.08 + 0.22 * exp(-reach * 1.85 - abs(t - 0.57) * 1.60)
+    return mist + max(0.55 * stem, leaf * growth * (1 - smooth(0.80, 1, reach / span))) * 0.75
+  },
+})
+
 export const generators: readonly Generator[] = [
-  silk, atmosphere, modules, kaleid, moire, terrain, print, iridescence, vortex, arches, cells, fractal,
+  silk, atmosphere, modules, kaleid, moire, terrain, print, iridescence, vortex, arches, cells, fractal, ...geometry, dunes, branches, ...chromatic,
 ]
 export const generatorById = new Map(generators.map((generator) => [generator.id, generator]))
 

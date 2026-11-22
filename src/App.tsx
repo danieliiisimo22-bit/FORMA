@@ -12,7 +12,7 @@ import { generatorById } from './generators'
 import { families, familyDescriptions } from './generators/families'
 import type { Family } from './generators/families'
 import { aspectRatio, aspects, explore, initialRecipe, mutate, presets, surprise, variant } from './presets/recipes'
-import { recipeKey, useStudio } from './state/studio'
+import { compositionKey, recipeKey, useStudio } from './state/studio'
 
 type Modal = 'palette' | 'export' | 'library' | 'compare' | 'aspect' | 'help'
 type View = 'history' | 'favorites' | 'variants'
@@ -222,7 +222,7 @@ export default function App() {
               const active = currentKey === key
               const title = generatorById.get(item.generator)!.name
               const saved = favorites.some((saved) => recipeKey(saved) === key)
-              return <div className={'film-item ' + (active ? 'selected' : '')} key={key}>
+              return <div className={'film-item ' + (active ? 'selected' : '')} key={view === 'history' ? compositionKey(item) : key}>
                 <button type="button" className="film-open" aria-pressed={active} title={title + ' · ' + item.seed}
                   onClick={() => apply(item)}><Artwork recipe={item} thumbnail /><span>{title}</span></button>
                 <IconButton className="film-heart" label={(saved ? 'Quitar favorito ' : 'Marcar favorito ') + title}

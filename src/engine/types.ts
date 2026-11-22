@@ -41,6 +41,7 @@ export interface Parameter {
   description: string
   initial: number
   safe: readonly [number, number]
+  choices?: readonly string[]
 }
 
 export interface Generator {
@@ -51,6 +52,7 @@ export interface Generator {
   description: string
   palette: string
   presetSeed: number
+  presetTexture?: Recipe['texture']
   parameters: readonly [Parameter, Parameter, Parameter, Parameter]
   symmetry: readonly SymmetryMode[]
   intense?: boolean
