@@ -1,4 +1,4 @@
-<p align="center"><img src="public/forma.svg" alt="Espiral de FORMA" width="78" height="78"></p>
+<p align="center"><img src="public/forma-espiral.svg" alt="Espiral de FORMA" width="78" height="78"></p>
 
 # FORMA — Generative Art Studio
 
@@ -6,7 +6,7 @@ Estudio local para crear fondos y arte abstracto procedural. **Rust** implementa
 
 [Descargas](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2) · [English README](README.en.md) · [Roadmap](docs/roadmap.md) · [Licencia MIT](LICENSE)
 
-![FORMA con el lienzo, la biblioteca y los controles de composición](docs/validacion/estudio.png)
+![FORMA con la espiral, el lienzo y los controles de composición](docs/validacion/estudio-espiral.png)
 
 ## Descargar y abrir
 

@@ -4,7 +4,7 @@ A local procedural art studio for abstract compositions and wallpapers. **Rust**
 
 [Español](README.md) · [Downloads](https://github.com/danieliiisimo22-bit/FORMA/releases/tag/v1.2.0-preview.2) · [MIT license](LICENSE)
 
-![The FORMA studio with its canvas, library, and controls](docs/validacion/estudio.png)
+![The FORMA studio with its spiral icon, canvas, and composition controls](docs/validacion/estudio-espiral.png)
 
 Download the ZIP for Windows x64, macOS 13+ (Apple Silicon or Intel), or Linux x64. Extract it and launch `forma.exe` on Windows or run `./forma` in a terminal on macOS or Linux. Keep the terminal open while using the studio at `http://127.0.0.1:56144/`. The macOS binaries are previews distributed without Apple notarization. [Desktop guide](docs/desktop.md)
 

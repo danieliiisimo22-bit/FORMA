@@ -129,7 +129,7 @@ fn build_web() -> Result<(), Box<dyn Error>> {
         ("web/styles.css", "styles.css"),
         ("web/start.js", "start.js"),
         ("web/worker.js", "worker.js"),
-        ("public/forma.svg", "forma.svg"),
+        ("public/forma-espiral.svg", "forma.svg"),
         (
             "public/third-party-licenses.txt",
             "third-party-licenses.txt",

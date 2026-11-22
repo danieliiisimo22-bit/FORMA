@@ -9,7 +9,7 @@
 | Exportación | PNG, JPEG y WebP a tamaño final. Worker Rust/WebAssembly, exportación 8K, cancelación y reintento. |
 | Portables | Windows x64, Linux x64 y macOS 13+ para Apple Silicon e Intel. Los ZIP incluyen permisos ejecutables y sumas SHA-256. |
 
-La galería de 110 composiciones se conserva como referencia visual. Las capturas de la interfaz y las muestras de los cuatro estilos cromáticos se generan con la compilación Rust. [Galería](validacion/galeria.png) · [Captura de escritorio](validacion/estudio.png) · [Vista móvil](validacion/movil.png) · [Ajustes móviles](validacion/movil-ajustes.png)
+La galería de 110 composiciones se conserva como referencia visual. Las capturas de la interfaz y las muestras de los cuatro estilos cromáticos se generan con la compilación Rust. [Galería](validacion/galeria.png) · [Captura de escritorio](validacion/estudio-espiral.png) · [Vista móvil](validacion/movil.png) · [Ajustes móviles](validacion/movil-ajustes.png)
 
 Para verificar el motor, ejecuta `cargo test --locked -p forma-core`. Compila el escritorio y ejecuta `npm run test:e2e` para probarlo en Chromium. `npm run test:gallery` verifica los 22 shaders en WebGL2 y genera capturas nuevas. [Compilación](desktop.md) · [Pruebas de compatibilidad](../rust/core/tests/compatibility.rs)
 
